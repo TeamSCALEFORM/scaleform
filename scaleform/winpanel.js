@@ -1,8 +1,4 @@
-R'(
-// ${isCt} - winner team is CT
-// ${isT} - whether winner team is T
-// ${pendingMvp} - there's a mvp for the round
-// ${is2013} - is 2013 winpanel or post 2013
+R"(
 if (${pendingMvp})
 {
     var context_panel = $.GetContextPanel();
@@ -113,4 +109,4 @@ if (${pendingMvp})
     
 
 }
-)'
+)"

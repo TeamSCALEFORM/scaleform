@@ -223,7 +223,7 @@ void ::scaleform_tick(tsf::player_t *local)
                  {
                      DEBUG("Changed hud healthammo style!\n");
                      std::string js = std::string(healthammo);
-                     replace_str(js, HEALTHAMMO_STYLE, n == 0 ? true : false);
+                     replace_str(js, HEALTHAMMO_STYLE, (n == 0 ? "true" : "false"));
                      engine->run_script(scf.root, js.c_str(), CSGO_HUD_SCHEMA);
                  });
     
