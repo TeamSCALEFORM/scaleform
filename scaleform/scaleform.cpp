@@ -17,6 +17,13 @@ JAVASCRIPT buyzone =
 #include "buyzone.js"
 ;
 
+
+// ${style} - healthammo style
+#define HEALTHAMMO_STYLE "${style}"
+JAVASCRIPT healthammo =
+#include "healthammo.js"
+;
+
 JAVASCRIPT deathnotices =
 #include "deathnotices.js"
 ;
@@ -193,7 +200,6 @@ void ::scaleform_tick(tsf::player_t *local)
         scf.weap_sel->set_visible(true);
     }
     
-    
     UPDATING_VAR(scf.old_color, n, min(std::size(colors) - 1, ctx.c.cl_hud_color->get_int()),
                  {
                      DEBUG("Changed hud color!\n");
@@ -210,6 +216,16 @@ void ::scaleform_tick(tsf::player_t *local)
                      char buf[16];
                      sprintf(buf, "%.2f", n);
                      replace_str(js, ALPHA, buf);
+                     engine->run_script(scf.root, js.c_str(), CSGO_HUD_SCHEMA);
+                 });
+    
+    UPDATING_VAR(scf.old_healthammo_style, n, ctx.c.cl_hud_healthammo_style->get_int(),
+                 {
+                     DEBUG("Changed hud healthammo style!\n");
+                     std::string js = std::string(healthammo);
+                     char buf[16];
+                     sprintf(buf, "%d", n);
+                     replace_str(js, HEALTHAMMO_STYLE, buf);
                      engine->run_script(scf.root, js.c_str(), CSGO_HUD_SCHEMA);
                  });
     

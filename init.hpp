@@ -36,6 +36,7 @@ struct context_t {
     struct cvars_t {
         tsf::cvar_t *cl_hud_color;
         tsf::cvar_t *cl_hud_background_alpha;
+        tsf::cvar_t *cl_hud_healthammo_style;
     } c;
     struct globals_t {
         bool scf_on;
