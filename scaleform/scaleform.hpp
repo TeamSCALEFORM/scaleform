@@ -3,6 +3,7 @@
 namespace tsf
 {
     struct ui_panel_t;
+    struct player_t;
 }
 
 struct scaleform_t
@@ -28,4 +29,4 @@ struct scaleform_t
 
 void scaleform_init();
 void scaleform_install();
-void scaleform_tick();
+void scaleform_tick(tsf::player_t *);

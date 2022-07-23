@@ -18,6 +18,8 @@
 namespace tsf 
 {
     struct panorama_t;
+    struct cvar_t;
+    struct cvars_t;
 }
 
 struct context_t {
@@ -29,7 +31,15 @@ struct context_t {
     
     struct interfaces_t {
         tsf::panorama_t *panorama;
+        tsf::cvars_t *cvars;
     } i;
+    struct cvars_t {
+        tsf::cvar_t *cl_hud_color;
+        tsf::cvar_t *cl_hud_background_alpha;
+    } c;
+    struct globals_t {
+        bool scf_on;
+    } g;
 } inline ctx;
 
 void init();

@@ -27,7 +27,8 @@ namespace tsf
         }
     };
     
-    struct ui_engine_t {
+    struct ui_engine_t 
+    {
         bool is_valid_panel_pointer(ui_panel_t const *panel)
         {
             return ((bool(__thiscall*)(ui_engine_t *, ui_panel_t const *))((*(uintptr_t**)(this))[36]))(this, panel);
@@ -45,16 +46,48 @@ namespace tsf
         }
     };
     
-    struct panorama_t {
+    struct panorama_t
+    {
         ui_engine_t *access_ui_engine() 
         {
             return ((ui_engine_t *(__thiscall*)(panorama_t *))((*(uintptr_t**)(this))[11]))(this);
         }
     };
     
-    struct user_cmd_t {
-        int get_command_number() {
+    struct player_t
+    {
+        bool in_buyzone()
+        {
+            return *(bool*)((uintptr_t)this + 0x99B5);
+        }
+    };
+    
+    struct user_cmd_t 
+    {
+        int get_command_number() 
+        {
             return *(int*)((uintptr_t)this + 0x4);
+        }
+    };
+    
+    struct cvar_t
+    {
+        float get_float() 
+        {
+            return ((float(__thiscall*)(cvar_t *))((*(uintptr_t**)(this))[12]))(this);
+        }
+        
+        int get_int() 
+        {
+            return ((int(__thiscall*)(cvar_t *))((*(uintptr_t**)(this))[13]))(this);
+        }
+    };
+    
+    struct cvars_t
+    {
+        cvar_t *get_var(const char *name) 
+        {
+            return ((cvar_t *(__thiscall*)(cvars_t *, const char *))((*(uintptr_t**)(this))[16]))(this, name);
         }
     };
 }

@@ -10,7 +10,8 @@ patterns = {
 	"*.cxx",
 	"*.hxx",
 	"*.txt",
-	"*.xml",
+	"*.md",
+	"*.js",
 	"*.cmake"
 };
 

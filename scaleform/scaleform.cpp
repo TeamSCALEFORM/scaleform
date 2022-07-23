@@ -1,18 +1,65 @@
 #include <string>
+#include <minmax.h>
 #include "scaleform.hpp"
 #include "../init.hpp"
 #include "../sdk.hpp"
+#include "../config.hpp"
 
 #include "sanitary_macros.hpp"
-
-#define CSGO_HUD_SCHEMA "panorama/layout/hud/hud.xml"
 
 JAVASCRIPT base =
 #include "base.js"
 ;
 
-// TODO: set to default value
-SCALEFORM_JS_STATE winpanel;
+// ${buyZone} - percentage
+#define BUYZONE "${buyZone}"
+JAVASCRIPT buyzone =
+#include "buyzone.js"
+;
+
+// ${radarColor} - radar hex
+// ${dashboardLabelColor} - dashboard label hex
+#define RADAR_COLOR "${radarColor}"
+#define DASHBOARD_LABEL_COLOR "${dashboardLabelColor}"
+JAVASCRIPT color = 
+#include "color.js"
+;
+
+// ${alpha} - alpha float
+#define ALPHA "${alpha}"
+JAVASCRIPT alpha =
+#include "alpha.js"
+;
+#define MAX_ALPHA 1.F
+
+// Old colors
+// Note: for dashboard label we just append 'B2' (70% opac)
+// for radar elements we just add '19' (25% opac)
+HEX_COLOR colors[11] = 
+{
+    "#F5FFC0", // Classic
+    "#FFFFFF", // White
+    "#C4ECFE", // Light Blue
+    "#6E9CFB", // Dark Blue
+    "#F294FF", // Purple
+    "#FF6057", // Red
+    "#FFA557", // Orange
+    "#FEFD55", // Yellow
+    "#78FF51", // Green
+    "#57FFBD", // Pale Green/Aqua
+    "#FFADC4"  // Pink
+};
+
+#define kRadarColor 0
+#define kDashColor 1
+static std::string get_color(int n, int color_type)
+{
+    if (color_type == kRadarColor)
+        return std::string(colors[n]) + "19";
+    else if (color_type == kDashColor)
+        return std::string(colors[n]) + "B2";
+    else return std::string(colors[n]);
+};
 
 // utilities
 
@@ -63,7 +110,7 @@ void ::scaleform_init()
 
 void ::scaleform_install()
 {
-    if (scf.inited)
+    if (!ctx.g.scf_on || scf.inited)
         return;
     
     if (scf.root = get_panel("CSGOHud"); !scf.root) {
@@ -92,27 +139,65 @@ void ::scaleform_install()
     engine->run_script(scf.root, base, CSGO_HUD_SCHEMA);
     
     scf.inited = true;
+    LOG("Scaleform installed!\n");
 }
 
-void ::scaleform_tick()
+void ::scaleform_tick(tsf::player_t *local)
 {
-    bool on = true;
+    // listen to user commands
+    if (GetAsyncKeyState(SCALEFORM_TOGGLE_KEY) & 1)
+    {
+        ctx.g.scf_on = !ctx.g.scf_on;
+        LOG("Toggled Scaleform %s\n", (ctx.g.scf_on ? "on" : "off"));
+    }
+    
+    tsf::ui_engine_t *engine = ctx.i.panorama->access_ui_engine();
+    if (!engine)
+        return;
     
     // could also be potential recovery from (very unlikely to impossible)
     // fail in levelinit
-    if (!scf.inited && on)
+    if (!scf.inited && ctx.g.scf_on)
     {
         scaleform_install();
         return;
-    } else if (!scf.inited || !on) 
+    } else if (!scf.inited || !ctx.g.scf_on) 
         return;
     
     // TODO: other way around, fully reinitialzie schema on toggle off
+    
+    // tick events
     
     if (scf.weap_sel) {
         // make always visible (needs to be done in C++ for performance)
         scf.weap_sel->set_visible(true);
     }
     
-    // verify state vars and update
+    
+    UPDATING_VAR(scf.old_color, n, min(std::size(colors) - 1, ctx.c.cl_hud_color->get_int()),
+                 {
+                     DEBUG("Changed hud color!\n");
+                     std::string js = std::string(color);
+                     replace_str(js, RADAR_COLOR, get_color(n, kRadarColor));
+                     replace_str(js, DASHBOARD_LABEL_COLOR, get_color(n, kDashColor));
+                     engine->run_script(scf.root, js.c_str(), CSGO_HUD_SCHEMA);
+                 });
+    
+    UPDATING_VAR(scf.old_alpha, n, min(MAX_ALPHA, ctx.c.cl_hud_background_alpha->get_float()),
+                 {
+                     DEBUG("Changed hud alpha!\n");
+                     std::string js = std::string(alpha);
+                     char buf[16];
+                     sprintf(buf, "%.2f", n);
+                     replace_str(js, ALPHA, buf);
+                     engine->run_script(scf.root, js.c_str(), CSGO_HUD_SCHEMA);
+                 });
+    
+    UPDATING_VAR(scf.old_in_buyzone, n, local->in_buyzone(),
+                 {
+                     DEBUG("Changed buyzone state!\n");
+                     std::string js = std::string(buyzone);
+                     replace_str(js, BUYZONE, n == 1 ? "100%" : "0%");
+                     engine->run_script(scf.root, js.c_str(), CSGO_HUD_SCHEMA);
+                 });
 }

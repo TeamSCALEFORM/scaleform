@@ -1,6 +1,7 @@
 #include "init.hpp"
 #include "sdk.hpp"
 
+#include "config.hpp"
 #include "scaleform/scaleform.hpp"
 
 #include <minhook.h>
@@ -16,7 +17,7 @@ static inline fn_t* og;                   \
 // decl hooks
 prot_hook(level_init_pre_entity, void(__stdcall *)(const char *));
 prot_hook(level_shutdown, void(__fastcall *)(void *, void *));
-prot_hook(create_move, bool(__fastcall *)(void *, void *, float, tsf::user_cmd_t *));
+prot_hook(create_move, bool(__fastcall *)(tsf::player_t *, void *, float, tsf::user_cmd_t *));
 
 // impl hooks
 void level_init_pre_entity::fn(const char *map)
@@ -34,7 +35,7 @@ void level_shutdown::fn(void *self, void *edx)
     return scaleform_init();
 }
 
-bool create_move::fn(void *self, void *edx, float input_sample_time, tsf::user_cmd_t *cmd)
+bool create_move::fn(tsf::player_t *self, void *edx, float input_sample_time, tsf::user_cmd_t *cmd)
 {
     if (!self || !cmd->get_command_number() || !input_sample_time)
         return og(self, edx, input_sample_time, cmd);
@@ -42,7 +43,7 @@ bool create_move::fn(void *self, void *edx, float input_sample_time, tsf::user_c
     bool ret = og(self, edx, input_sample_time, cmd);
     
     // TODO: This is not the ideal place for this...
-    scaleform_tick();
+    scaleform_tick(self);
     
     return ret;
 }
@@ -84,6 +85,16 @@ static void ctx_init()
     if (panorama.has_value())
         ctx.i.panorama = *(tsf::panorama_t **)(panorama.value() + 1);
     else (void)(LOG("Failed init (panorama interface nil)\n"), exit(0));
+    
+    auto cvars = ctx.engine.find_string<uintptr_t, false>("sv_skyname", 3, {0x8b, 0x0d}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS);
+    if (cvars.has_value())
+        ctx.i.cvars = **(tsf::cvars_t ***)(cvars.value() + 2);
+    else (void)(LOG("Failed init (cvars interface nil)\n"), exit(0));
+    
+    ctx.c.cl_hud_color = ctx.i.cvars->get_var("cl_hud_color");
+    ctx.c.cl_hud_background_alpha = ctx.i.cvars->get_var("cl_hud_background_alpha");
+    
+    ctx.g.scf_on = SCALEFORM_DEFAULT;
 }
 
 void ::init()
