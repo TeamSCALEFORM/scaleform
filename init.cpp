@@ -54,7 +54,6 @@ bool fire_event_intern::fn(void *self, void *edx, tsf::event_t *event, bool clie
     if (!event)
         return og(self, edx, event, client, server);
     
-    
     scaleform_on_event(event);
     
     return og(self, edx, event, client, server);
@@ -66,7 +65,7 @@ static void hook_impl(std::optional<void *> &&target) {
     if (target.has_value() &&
         (MH_CreateHook(target.value(), (void*)(&T::fn), (void**)(&T::og)) == MH_OK))
     {
-        LOG("Succesful hook at %x\n", (uintptr_t)target.value());
+        LOG("Succesful hook at %p\n", target.value());
     } else {
         (void)(LOG("Failed hooking (address nil)\n"), exit(0));
     }
