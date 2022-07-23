@@ -1,201 +1,116 @@
-R"(
+R'(
+// ${isCt} - winner team is CT
+// ${isT} - whether winner team is T
+// ${pendingMvp} - there's a mvp for the round
+// ${is2013} - is 2013 winpanel or post 2013
 if (${pendingMvp})
 {
     var context_panel = $.GetContextPanel();
-    var winpanelBackground = "https://images2.imgbox.com/9b/a5/igisaPg8_o.png";
-    for (var hideTeamIcon of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('TeamBG__DefaultLogo')){hideTeamIcon.style.visibility = 'collapse'; hideTeamIcon.style.opacity = '0';}
-    for(var wpbg of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('TeamBG__MainBG'))
-    {
-        for (var title of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('TeamFG__Title'))
-        {
-            var textColor = "#FFFFFF";
-            title.style.fontSize = "40px";
-            title.style.marginTop = "-45px";
-            if(${isCT})
-            {
-                textColor = "#B4BBBE";
-                if(${is2018})
-                {
-                    title.style.visibility = 'visible';
-                    winpanelBackground = "https://images2.imgbox.com/9b/a5/igisaPg8_o.png";
-                    for (var img of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('MVP__Avatar'))
-                    {
-                        img.style.visibility = 'visible';
-                        img.style.zIndex = "1000";
-                        img.style.height = "60px";
-                        img.style.width = "60px";
-                        img.style.backgroundColor = "#00000000";
-                        img.style.marginTop = "19px";
-                        img.style.paddingLeft = "0px";
-                        img.style.marginLeft = "25px";
-                    }
-                    for (var star of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('MVP__WinnerStar')){
-                        star.style.visibility= "visible";
-                        star.style.marginTop = "25%";
-                        star.style.marginLeft = "-2px";
-                        star.SetImage('https://cdn.discordapp.com/attachments/954389817536421908/957676079642980392/star.svg');
-                        star.style.transform = 'translateY(5px)';
-                    }
-                    for (var playerName of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('MVP__WinnerName')){
-                        playerName.style.visibility = 'visible';
-                        playerName.style.marginTop = "20px";
-                        playerName.style.color = "#717377";
-                        playerName.style.marginLeft = "2px";
-                        playerName.style.fontSize = "17px";
-                        playerName.style.fontWeight = 'bold';
-                        playerName.style.transform = 'translateY(5px)';
-                    }
-                    var ff = hwp.FindChildTraverse('FunFactText');
-                    ff.style.width = '813px';
-                    ff.style.x = '107px';
-                    ff.style.marginTop = '5px';
-                    ff.style.backgroundColor = '#000000CC';
-                }
-                if(${is2013})
-                {
-                    title.style.visibility = 'collapse';
-                    winpanelBackground = "https://images2.imgbox.com/77/d5/T79ImP9g_o.png";
-                    for (var img of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('MVP__Avatar'))
-                    {
-                       img.style.visibility = 'visible';
-                        img.style.zIndex = "500";
-                        img.style.height = "59px";
-                        img.style.width = "59px";
-                        img.style.marginTop = "19px";
-                        img.style.padding = '0px';
-                        img.style.paddingTop = '2px';
-                        img.style.backgroundSize = '50%';
-                        img.style.marginLeft = "25px";
-                        img.style.backgroundColor = 'gradient( linear, 0% 0%, 0% 100%, from( #7d7d7d ), to( #202020) )';  
-                    }
-                    for (var star of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('MVP__WinnerStar'))
-                    { star.style.visibility= 'collapse'; }
-                    for (var playerName of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('MVP__WinnerName'))
-                    {
-                        playerName.style.visibility = 'visible';
-                        playerName.style.marginTop = "15px";
-                        playerName.style.color = "#717377";
-                        playerName.style.marginLeft = "-4px";
-                        playerName.style.fontSize = "22px";
-                        playerName.style.fontWeight = 'light';
-                        playerName.style.transform = 'translateY(5px)';
-                    }
-                    var ff = context_panel.FindChildTraverse('FunFactText');
-                    ff.style.width = '813px';
-                    ff.style.height = '40px';
-                    ff.style.x = '107px';
-                    ff.style.marginTop = '5px';
-                    ff.style.backgroundColor = '#000000CC';
-                    ff.style.textAlign = 'left';
-                    ff.style.fontSize = '19px';
-                    ff.style.fontWeight = 'light';
-                    ff.style.verticalAlign = 'center';
-                    ff.style.paddingTop = '10px';
-                    ff.style.paddingLeft = '25px';
-                }
-            }
+    var textColor = ${isCt} ? '#B4BBBE' : '#D6C8B5';
+    var winpanelBackground = ${isCt} ? 'https://images2.imgbox.com/9b/a5/igisaPg8_o.png' : ${isT} ? 'https://images2.imgbox.com/c9/be/43gnCOjE_o.png' : 'https://images2.imgbox.com/9b/a5/igisaPg8_o.png';
+    if (${is2013})
+        winpanelBackground = ${isCt} ? 'https://images2.imgbox.com/77/d5/T79ImP9g_o.png' : ${isT} ? 'https://images2.imgbox.com/26/56/eEUIVB7m_o.png' : 'https://images2.imgbox.com/77/d5/T79ImP9g_o.png';
 
-            if(${isT})
-            {
-                textColor = "#D6C8B5";
-                if(${is2018})
-                {
-                    winpanelBackground = "https://images2.imgbox.com/c9/be/43gnCOjE_o.png";
-                    title.style.visibility = 'visible';
-                    for (var img of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('MVP__Avatar'))
-                    {
-                       img.style.visibility = 'visible';
-                        img.style.zIndex = "1000";
-                        img.style.height = "60px";
-                        img.style.width = "60px";
-                        img.style.backgroundColor = "#00000000";
-                        img.style.marginTop = "19px";
-                        img.style.paddingLeft = "0px";
-                        img.style.marginLeft = "25px";
-                    }
-                    for (var star of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('MVP__WinnerStar')){
-                        star.style.visibility= "visible";
-                        star.style.marginTop = "25%";
-                        star.style.marginLeft = "-2px";
-                        star.SetImage('https://cdn.discordapp.com/attachments/954389817536421908/957676079642980392/star.svg');
-                        star.style.transform = 'translateY(5px)';
-                    }
-                    for (var playerName of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('MVP__WinnerName')){
-                        playerName.style.visibility = 'visible';
-                        playerName.style.marginTop = "20px";
-                        playerName.style.color = "#717377";
-                        playerName.style.marginLeft = "2px";
-                        playerName.style.fontSize = "17px";
-                        playerName.style.fontWeight = 'bold';
-                        playerName.style.transform = 'translateY(5px)';
-                    }
-                    var ff = hwp.FindChildTraverse('FunFactText');
-                    ff.style.width = '813px';
-                    ff.style.x = '107px';
-                    ff.style.marginTop = '5px';
-                    ff.style.backgroundColor = '#000000CC';
-                }
-                if(${is2013})
-                {
-                    winpanelBackground = "https://images2.imgbox.com/26/56/eEUIVB7m_o.png";
-                    title.style.visibility = 'collapse';
-                    for (var img of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('MVP__Avatar'))
-                    {
-                       img.style.visibility = 'visible';
-                        img.style.zIndex = "500";
-                        img.style.height = "59px";
-                        img.style.width = "59px";
-                        img.style.marginTop = "19px";
-                        img.style.padding = '0px';
-                        img.style.paddingTop = '2px';
-                        img.style.backgroundSize = '50%';
-                        img.style.marginLeft = "25px";
-                        img.style.backgroundColor = 'gradient( linear, 0% 0%, 0% 100%, from( #7d7d7d ), to( #202020) )';  
-                    }
-                    for (var star of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('MVP__WinnerStar'))
-                    { star.style.visibility= 'collapse'; }
-                    for (var playerName of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('MVP__WinnerName'))
-                    {
-                        playerName.style.visibility = 'visible';
-                        playerName.style.marginTop = "15px";
-                        playerName.style.color = "#717377";
-                        playerName.style.marginLeft = "-4px";
-                        playerName.style.fontSize = "22px";
-                        playerName.style.fontWeight = 'light';
-                        playerName.style.transform = 'translateY(5px)';
-                    }
-                    var ff = context_panel.FindChildTraverse('FunFactText');
-                    ff.style.width = '813px';
-                    ff.style.height = '40px';
-                    ff.style.x = '107px';
-                    ff.style.marginTop = '5px';
-                    ff.style.backgroundColor = '#000000CC';
-                    ff.style.textAlign = 'left';
-                    ff.style.fontSize = '19px';
-                    ff.style.fontWeight = 'light';
-                    ff.style.verticalAlign = 'center';
-                    ff.style.paddingTop = '10px';
-                    ff.style.paddingLeft = '25px';
-                }
-            }
-
-            if(!${isT} && !${isCT}) // draw
-            {
-
-            }
-            title.style.color = `${textColor}`;
-        }
-        wpbg.style.backgroundImage = `url(${winpanelBackground})`;
-        wpbg.style.backgroundSize = 'cover';
-        wpbg.style.width = '815px';
-        wpbg.style.height = '155px';
-        wpbg.style.marginTop = '-42px';
-        wpbg.style.marginLeft = '105px';
-    }
     for (var mvp of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('MVP'))
     {
         mvp.style.visibility = 'visible';
-        mvp.style.width = "815px";
+        mvp.style.width = '815px';
     }
+
+    for (var winpanelBG of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('TeamBG__MainBG')) {
+        winpanelBG.style.marginTop = '-42px';
+        winpanelBG.style.width = '815px';
+        winpanelBG.style.height = '155px';
+        winpanelBG.style.backgroundImage = `url(${winpanelBackground})`;
+        winpanelBG.style.backgroundSize = 'cover';
+        winpanelBG.style.marginLeft = '105px';
+    }
+
+    for (var teamTitle of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('TeamFG__Title'))
+    {
+       teamTitle.style.visibility = ${is2013} ? 'collapse' : 'visible';
+       teamTitle.style.marginTop = '-45px';
+       teamTitle.style.color = textColor;
+       teamTitle.style.fontSize = '40px';
+    }
+
+    for (var star of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('MVP__WinnerStar')){
+        star.style.visibility = ${is2013} ? 'collapse' : 'visible';
+        star.style.marginTop = "25%";
+        star.style.marginLeft = "-2px";
+        star.SetImage('https://cdn.discordapp.com/attachments/954389817536421908/957676079642980392/star.svg');
+        star.style.transform = 'translateY(5px)';
+    }
+
+    for (var playerName of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('MVP__WinnerName')){
+        playerName.style.visibility = 'visible';
+        playerName.style.marginTop = ${is2013} ? "15px" : "20px";
+        playerName.style.color = ${isCt} ? "#717377" : "#8A7E6C";
+        playerName.style.marginLeft = ${is2013} ? "-4px" : "2px";
+        playerName.style.fontSize = ${is2013 ? "22px" : "17px";
+        playerName.style.fontWeight = ${is2013} ? 'light' : 'bold';
+        playerName.style.transform = 'translateY(5px)';
+    }
+    for (var profileImg of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('MVP__Avatar'))
+    {
+        if{${is2013}}
+        {
+            profileImg.style.visibility = 'visible';
+            profileImg.style.zIndex = "500";
+            profileImg.style.height = "59px";
+            profileImg.style.width = "59px";
+            profileImg.style.marginTop = "19px";
+            profileImg.style.padding = '0px';
+            profileImg.style.paddingTop = '2px';
+            profileImg.style.backgroundSize = '50%';
+            profileImg.style.marginLeft = "25px";
+            profileImg.style.backgroundColor = 'gradient( linear, 0% 0%, 0% 100%, from( #7d7d7d ), to( #202020) )';
+            for(var imgPadding of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('AvatarImage'))
+            {
+                imgPadding.style.padding = '0px';
+            }
+        }
+        else
+        {
+            profileImg.style.visibility = 'visible';
+            profileImg.style.zIndex = "1000";
+            profileImg.style.height = "60px";
+            profileImg.style.width = "60px";
+            profileImg.style.backgroundColor = "#00000000";
+            profileImg.style.marginTop = "19px";
+            profileImg.style.paddingLeft = "0px";
+            profileImg.style.marginLeft = "25px";
+        }
+    }
+    var funfact = context_panel.FindChildTraverse('FunFactText');
+    if{!${is2013}}
+    {
+        ff.style.width = '813px';
+        ff.style.x = '107px';
+        ff.style.marginTop = '5px';
+        ff.style.backgroundColor = '#000000CC';
+    }
+    else
+    {
+        funfact.style.width = '813px';
+        funfact.style.height = '40px';
+        funfact.style.x = '107px';
+        funfact.style.marginTop = '5px';
+        funfact.style.backgroundColor = '#000000CC';
+        funfact.style.textAlign = 'left';
+        funfact.style.fontSize = '19px';
+        funfact.style.fontWeight = 'light';
+        funfact.style.verticalAlign = 'center';
+        funfact.style.paddingTop = '10px';
+        funfact.style.paddingLeft = '25px';
+    }
+
+    /* <--------- REMOVALS ---------->*/
+    for (var h of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('TeamBG__hrTop')) {h.style.x = '0';h.style.y = '0';h.style.width = '0';h.style.height = '0';}
+    for (var h of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('TeamBG__hrMid')) {h.style.x = '0';h.style.y = '0';h.style.width = '0';h.style.height = '0';}
+	for (var h of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('TeamBG__hrBot')) {h.style.x = '0';h.style.y = '0';h.style.width = '0';h.style.height = '0';}
+    for (var hideTeamIcon of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('TeamBG__DefaultLogo')){hideTeamIcon.style.visibility = 'collapse'; hideTeamIcon.style.opacity = '0';}
+    
+
 }
-)"
+)'
