@@ -54,11 +54,11 @@ for (var buyIcon of hudMoney.FindChildrenWithClassTraverse('money-text-buy-icon'
 // Reposition and change the color of animations
 var moneyAdd = hudMoney.FindChildTraverse('Money-Add');
 moneyAdd.style.color = '#7CC213';
-moneyAdd.marginLeft = '25px';
+moneyAdd.style.marginLeft = '25px';
 var moneyAddFlash = hudMoney.FindChildTraverse('Money-AddFlash');
 moneyAddFlash.style.color = '#D3E798';
 var moneyRemove = hudMoney.FindChildTraverse('Money-Remove');
-moneyRemove.marginLeft = '30px';
+moneyRemove.style.marginLeft = '30px';
 moneyRemove.style.color = '#FD2424';
 
 // Radar
@@ -74,7 +74,7 @@ dashboardLabel.style.paddingTop = '10px';
 dashboardLabel.style.width = '280px';
 dashboardLabel.style.height = '51px';
 dashboardLabel.style.paddingLeft = '12px';
-dashboardLabel.style.backgroundImage = 'url(${dashboardLabelImg})';
+dashboardLabel.style.backgroundImage = `url(${dashboardLabelImg})`;
 dashboardLabel.style.backgroundColor = '#00000000';
 dashboardLabel.style.backgroundSize = '100% 100%';
 dashboardLabel.style.fontFamily = 'Stratum2';
