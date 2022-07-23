@@ -64,11 +64,8 @@ template <typename T>
 static void hook_impl(std::optional<void *> &&target) {
     if (target.has_value() &&
         (MH_CreateHook(target.value(), (void*)(&T::fn), (void**)(&T::og)) == MH_OK))
-    {
         LOG("Succesful hook at %p\n", target.value());
-    } else {
-        (void)(LOG("Failed hooking (address nil)\n"), exit(0));
-    }
+    else (void)(LOG("Failed hooking (address nil)\n"), exit(0));
 }
 #define hook(a, ...) hook_impl<a>(__VA_ARGS__)
 
@@ -103,7 +100,7 @@ static void ctx_init()
         ctx.i.cvars = **(tsf::cvars_t ***)(cvars.value() + 2);
     else (void)(LOG("Failed init (cvars interface nil)\n"), exit(0));
     
-    ctx.c.cl_hud_color = ctx.i.cvars->get_var("cl_hud_color");
+    ctx.c.cl_hud_color            = ctx.i.cvars->get_var("cl_hud_color");
     ctx.c.cl_hud_background_alpha = ctx.i.cvars->get_var("cl_hud_background_alpha");
     
     ctx.g.scf_on = SCALEFORM_DEFAULT;
