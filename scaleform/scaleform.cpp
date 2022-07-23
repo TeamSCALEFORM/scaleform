@@ -17,6 +17,9 @@ JAVASCRIPT buyzone =
 #include "buyzone.js"
 ;
 
+JAVASCRIPT deathnotices =
+#include "deathnotices.js"
+;
 
 // ${isCt} - winner team is CT
 // ${pendingMvp} - there's a mvp for the round
@@ -242,4 +245,18 @@ void ::scaleform_on_event(tsf::event_t *event)
         scf.pending_mvp = true; // flag mvp
     else if (!strcmp(event->get_name(), "round_end"))
         scaleform_winpanel((bool)(event->get_int("winner") == 3));
+}
+
+void ::scaleform_on_death()
+{
+    if (!scf.inited)
+        return;
+    
+    tsf::ui_engine_t *engine = ctx.i.panorama->access_ui_engine();
+    if (!engine)
+        return LOG("Failed Scaleform Death Notice event (ui engine)\n");
+    
+    DEBUG("Deathnotices being edited!\n");
+    
+    engine->run_script(scf.root, deathnotices, CSGO_HUD_SCHEMA);
 }

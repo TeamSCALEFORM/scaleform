@@ -6,7 +6,7 @@ var moneyBgImg = "https://images2.imgbox.com/a9/2f/lt6Pj1Mc_o.png"
 var dashboardLabelImg = "https://images2.imgbox.com/62/17/y3tvD95I_o.png"
 
 var hudBottomLeft = contextPanel.FindChildTraverse('HudWeaponPanel').FindChildTraverse('WeaponPanelBottomBG');
-hudBottomLeft.backgroundImage = `url(${hudBottomLeftImg})`;	
+hudBottomLeft.style.backgroundImage = `url(${hudBottomLeftImg})`;	
 hudBottomLeft.style.backgroundColor = '#00000000';
 hudBottomLeft.style.backgroundSize = '100% 100%';
 hudBottomLeft.style.width = '312px';
