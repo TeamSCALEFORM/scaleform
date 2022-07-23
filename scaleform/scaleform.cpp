@@ -235,6 +235,9 @@ static void scaleform_winpanel(bool is_ct)
 
 void ::scaleform_on_event(tsf::event_t *event)
 {
+    if (!scf.inited)
+        return;
+    
     if (!strcmp(event->get_name(), "round_mvp"))
         scf.pending_mvp = true; // flag mvp
     else if (!strcmp(event->get_name(), "round_end"))
