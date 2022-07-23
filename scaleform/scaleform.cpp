@@ -21,10 +21,12 @@ JAVASCRIPT deathnotices =
 #include "deathnotices.js"
 ;
 
-// ${isCt} - winner team is CT
+// ${isCt} - whether winner team is CT
+// ${isT} - whether winner team is T
 // ${pendingMvp} - there's a mvp for the round
 // ${is2013} - is 2013 winpanel or post 2013
 #define IS_CT "${isCt}"
+#define IS_T "${isT}"
 #define PENDING_MVP "${pendingMvp}"
 #define IS_2013 "${is2013}"
 JAVASCRIPT winpanel =
@@ -220,7 +222,7 @@ void ::scaleform_tick(tsf::player_t *local)
                  });
 }
 
-static void scaleform_winpanel(bool is_ct)
+static void scaleform_winpanel(int team)
 {
     tsf::ui_engine_t *engine = ctx.i.panorama->access_ui_engine();
     if (!engine)
@@ -228,7 +230,8 @@ static void scaleform_winpanel(bool is_ct)
     
     DEBUG("Winpanel being edited!\n");
     std::string js = std::string(winpanel);
-    replace_str(js, IS_CT, is_ct ? "true" : "false");
+    replace_str(js, IS_CT, (team == 3) ? "true" : "false");
+    replace_str(js, IS_T, (team == 2) ? "true" : "false");
     replace_str(js, PENDING_MVP, scf.pending_mvp ? "true" : "false");
     replace_str(js, IS_2013, ctx.g.old_wp ? "true" : "false");
     engine->run_script(scf.root, js.c_str(), CSGO_HUD_SCHEMA);
@@ -244,7 +247,7 @@ void ::scaleform_on_event(tsf::event_t *event)
     if (!strcmp(event->get_name(), "round_mvp"))
         scf.pending_mvp = true; // flag mvp
     else if (!strcmp(event->get_name(), "round_end"))
-        scaleform_winpanel((bool)(event->get_int("winner") == 3));
+        scaleform_winpanel(event->get_int("winner"));
 }
 
 void ::scaleform_on_death()
