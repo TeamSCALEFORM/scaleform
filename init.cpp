@@ -115,6 +115,7 @@ static void ctx_init()
     
     ctx.c.cl_hud_color            = ctx.i.cvars->get_var("cl_hud_color");
     ctx.c.cl_hud_background_alpha = ctx.i.cvars->get_var("cl_hud_background_alpha");
+    ctx.c.cl_hud_healthammo_style = ctx.i.cvars->get_var("cl_hud_healthammo_style");
     
     ctx.g.scf_on = SCALEFORM_DEFAULT;
     ctx.g.old_wp = SCALEFORM_WINPANEL_DEFAULT;
