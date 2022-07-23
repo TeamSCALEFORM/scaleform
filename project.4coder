@@ -1,0 +1,56 @@
+project_name = "TeamSCALEFORM";
+
+patterns = {
+	"*.c",
+	"*.h",
+	"*.cc",
+	"*.hh",
+	"*.cpp",
+	"*.hpp",
+	"*.cxx",
+	"*.hxx",
+	"*.txt",
+	"*.xml",
+	"*.cmake"
+};
+
+load_paths = {
+	{
+		{ {"."}, .recursive = true, .relative = true },
+		.os = "win"
+	},
+};
+
+command_list = {
+	{
+		.name = "build_debug",
+		.out = "*compilation*",
+		.footer_panel = true,
+		.cursor_at_end = true,
+		.save_dirty_files = true,
+		.cmd =  {
+			{ "build_debug.bat", .os = "win" },
+		},
+	},
+	{
+		.name = "build_release",
+		.out = "*compilation*",
+		.footer_panel = true,
+		.cursor_at_end = true,
+		.save_dirty_files = true,
+		.cmd =  {
+			{ "build_release.bat", .os = "win" },
+		},
+	},
+	{
+		.name = "kill_compilation",
+		.footer_panel = false,
+		.cmd = {
+			{ "taskkill /F /IM ninja.exe", .os = "win" },
+		},
+	}
+};
+
+fkey_command[1] = "build_debug";
+fkey_command[3] = "build_release";
+fkey_command[4] = "kill_compilation";
