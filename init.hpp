@@ -39,6 +39,7 @@ struct context_t {
     } c;
     struct globals_t {
         bool scf_on;
+        bool old_wp;
     } g;
 } inline ctx;
 

@@ -90,4 +90,17 @@ namespace tsf
             return ((cvar_t *(__thiscall*)(cvars_t *, const char *))((*(uintptr_t**)(this))[16]))(this, name);
         }
     };
+    
+    struct event_t
+    {
+        const char *get_name() 
+        {
+            return ((const char *(__thiscall*)(event_t *))((*(uintptr_t**)(this))[1]))(this);
+        }
+        
+        int get_int(const char *key, int def = 0) 
+        {
+            return ((int(__thiscall*)(event_t *, const char *, int))((*(uintptr_t**)(this))[6]))(this, key, def);
+        }
+    };
 }
