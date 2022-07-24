@@ -66,9 +66,9 @@ void killfeed_update::fn(void *self, void *edx, tsf::event_t *event)
     if (!event)
         return og(self, edx, event);
     
-    scaleform_on_death();
+    og(self, edx, event);
     
-    return og(self, edx, event);
+    return scaleform_on_death();
 }
 
 // setup hooks
