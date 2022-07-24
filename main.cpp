@@ -3,6 +3,7 @@
 // 
 // ~TeamSCALEFORM~
 
+#include <filesystem>
 #include "init.hpp"
 
 BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID reserved)
@@ -22,14 +23,16 @@ BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID reserved)
         "jo: 2013 winpanel\n"
         "~~~~~~~~~~~~\n"
         "Refer to config.hpp for help\n"
-        "NOTE: TeamSCALEFORM currently requirse you disconnect\n"
+        "NOTE: TeamSCALEFORM currently requires you disconnect\n"
         "for Scaleform Toggle Off to take effect\n"
         "(Toggle On will immediately take effect.)\n"
+        "JavaScript to load on bind must be located at %s\\base.js\n"
         "~~~~~~~~~~~~\n"
         "This software is licensed under AGPL-3.0, if it\n"
         "wasn't shipped with the source code, you can download it at\n"
         "https://github.com/TeamSCALEFORM/scaleform\n"
-        "~~~~~~~~~~~~\n");
+        "~~~~~~~~~~~~\n",
+        std::filesystem::current_path().string().c_str());
     
     init();
     

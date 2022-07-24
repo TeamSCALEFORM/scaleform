@@ -1,3 +1,5 @@
+#include <fstream>
+#include <filesystem>
 #include <string>
 #include <minmax.h>
 #include "scaleform.hpp"
@@ -190,6 +192,22 @@ void ::scaleform_tick(tsf::player_t *local)
         return;
     } else if (!scf.inited || !ctx.g.scf_on) 
         return;
+    
+    if (GetAsyncKeyState(SCALEFORM_JAVASCRIPT_LOADER_KEY) & 1)
+    {
+        std::filesystem::path js_path = std::filesystem::current_path() / "base.js";
+        if (std::filesystem::exists(js_path))
+        {
+            std::ifstream read(js_path);
+            std::string js((std::istreambuf_iterator<char>(read)), std::istreambuf_iterator<char>());
+            engine->run_script(scf.root, js.c_str(), CSGO_HUD_SCHEMA);
+            LOG("Loaded JavaScript!\n");
+        }
+        else 
+        {
+            LOG("Cannot find %s!\n", js_path.string().c_str());
+        }
+    }
     
     // TODO: other way around, fully reinitialzie schema on toggle off
     
