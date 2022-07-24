@@ -39,7 +39,7 @@ void level_shutdown::fn(void *self, void *edx)
 
 bool create_move::fn(tsf::player_t *self, void *edx, float input_sample_time, tsf::user_cmd_t *cmd)
 {
-    if (!self || !cmd->get_command_number() || !input_sample_time)
+    if (!self || !cmd || !cmd->get_command_number() || !input_sample_time)
         return og(self, edx, input_sample_time, cmd);
     
     bool ret = og(self, edx, input_sample_time, cmd);
