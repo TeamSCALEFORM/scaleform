@@ -49,7 +49,7 @@ if (${pendingMvp})
     }
     for (var profileImg of context_panel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('MVP__Avatar'))
     {
-        if{${is2013}}
+        if (${is2013})
         {
             profileImg.style.visibility = 'visible';
             profileImg.style.zIndex = "500";
@@ -79,7 +79,7 @@ if (${pendingMvp})
         }
     }
     var funfact = context_panel.FindChildTraverse('FunFactText');
-    if{!${is2013}}
+    if (!${is2013})
     {
         ff.style.width = '813px';
         ff.style.x = '107px';

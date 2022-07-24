@@ -1,8 +1,7 @@
 R"(
-    // ${style} - healthammo style
-    var context_panel = $.GetContextPanel();
-    context_panel.FindChildTraverse('HudHealthArmor').style.marginLeft = '0px';
-    var hudHa = context_panel.FindChildTraverse('HudHealthArmor');
+    var contextPanel = $.GetContextPanel();
+    contextPanel.FindChildTraverse('HudHealthArmor').style.marginLeft = '0px';
+    var hudHa = contextPanel.FindChildTraverse('HudHealthArmor');
     /* <---- REMOVALS ----> */
     hudHa.FindChildTraverse('HudHealthBG').style.backgroundColor = '#00000000';
     hudHa.FindChildTraverse('HudArmorBG').style.backgroundColor = '#00000000';
@@ -116,7 +115,7 @@ R"(
         hudHaBgA.style.height = ${isShort} ? '120px' : '100%';
         hudHaBgA.style.opacity = '0.95';
         hudHaBgA.style.horizontalAlign = 'left';
-        hudHaBgA.style.overflow =  ${isShort} ? 'noclip' + 'squish';
+        hudHaBgA.style.overflow =  ${isShort} ? 'noclip' : 'squish';
     }
     
     for(var onDmg of hudHa.FindChildrenWithClassTraverse('hud-HA--on-damage'))
@@ -136,7 +135,7 @@ R"(
         }
     }
     
-    for (var health of context_panel.FindChildTraverse('HudHealthArmor').FindChildrenWithClassTraverse('hud-HA-icon--health'))
+    for (var health of contextPanel.FindChildTraverse('HudHealthArmor').FindChildrenWithClassTraverse('hud-HA-icon--health'))
     {
     
         health.SetImage('https://images2.imgbox.com/3f/ad/nTYzLRen_o.png');
@@ -145,7 +144,7 @@ R"(
         health.style.backgroundColor = '#00000000';
     }
     
-    for (var shield of context_panel.FindChildTraverse('HudHealthArmor').FindChildrenWithClassTraverse('hud-HA-icon--armor'))
+    for (var shield of contextPanel.FindChildTraverse('HudHealthArmor').FindChildrenWithClassTraverse('hud-HA-icon--armor'))
     {
         shield.SetImage('https://images2.imgbox.com/74/48/0CfxlpEt_o.png');
         shield.style.marginTop = '0px';
@@ -153,7 +152,7 @@ R"(
         shield.style.backgroundColor = '#00000000';
     }
     
-    for (var helmet  of context_panel.FindChildTraverse('HudHealthArmor').FindChildrenWithClassTraverse('hud-HA-icon--helmet'))
+    for (var helmet  of contextPanel.FindChildTraverse('HudHealthArmor').FindChildrenWithClassTraverse('hud-HA-icon--helmet'))
     {
         helmet.SetImage('https://images2.imgbox.com/74/48/0CfxlpEt_o.png');
         helmet.style.marginTop = '0px';
