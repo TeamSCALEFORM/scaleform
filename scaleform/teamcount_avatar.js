@@ -14,6 +14,17 @@ function runner() {
         avatarBackground.style.backgroundRepeat = 'no-repeat';
     
     }
+
+    for(var clr of hudTeamCounter.FindChildrenWithClassTraverse('AvatarL__PlayerColor'))
+    {
+        clr.style.y = '-2px';
+        clr.style.width = '24px';
+        clr.style.height = '12px';
+        clr.style.marginLeft = '0px';
+        clr.style.horizontalAlign = 'center';
+        clr.style.imgShadow = '0px 0px 1px 1.0 #000000CC';
+    }
+
     for (var avatarClr of hudTeamCounter.FindChildrenWithClassTraverse('AvatarL__PlayerColor')) {
         avatarClr.style.y = '-2px';
         avatarClr.style.width = '24px';

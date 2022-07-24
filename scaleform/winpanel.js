@@ -98,13 +98,16 @@ var funFact = contextPanel.FindChildTraverse('FunFactText');
 if (!${is2013})
 {
     funFact.style.width = '813px';
+    funFact.style.height = '35px';
     funFact.style.x = '107px';
     funFact.style.marginTop = '5px';
     funFact.style.backgroundColor = '#000000CC';
     funFact.style.verticalAlign = 'center';
     funFact.style.textAlign = 'center';
-    funFact.style.paddingTop = '0px';
+    funFact.style.paddingTop = '10px';
     funFact.style.paddingLeft = '0px';
+    funFact.style.fontWeight = 'normal';
+    funFact.style.fontSize = '16px';
 }
 else
 {

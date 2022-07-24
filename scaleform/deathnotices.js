@@ -33,9 +33,13 @@ for (var deathnotice of contextPanel.FindChildrenWithClassTraverse('DeathNotice'
 	{
 		for (var victim of contextPanel.FindChildTraverse('HudDeathNotice').FindChildrenWithClassTraverse('DeathNotice_Victim'))
 		{
-			victim.style.backgroundColor = '#0e0e0e';
+			victim.style.backgroundColor = '#0e0e0eB3';
 			victim.style.borderRadius = '3px';
 			victim.style.boxShadow = 'inset #e10000e6 0px 0px 1px;';
+		}
+		for(var content of victim.FindChildrenWithClassTraverse('DeathNoticeContent'))
+		{
+			content.style.transitionDelay = '5.0s';
 		}
 	}
 }
