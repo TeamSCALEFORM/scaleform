@@ -111,11 +111,11 @@ for(var hudHaBgA of hudHa.FindChildrenWithClassTraverse('hud-HA-bg-a'))
     hudHaBgA.style.backgroundImage = 'url("https://images2.imgbox.com/81/02/IrFgHYQq_o.png")'; // Armor.png
     hudHaBgA.style.backgroundSize = '100% 100%';
     hudHaBgA.style.backgroundImgOpacity = '1.0';
-    hudHaBgA.style.width = '100%';
-    hudHaBgA.style.height = ${isShort} ? '120px' : '100%';
+    hudHaBgA.style.width =  ${isShort} ? '210px' : '35px';
+    hudHaBgA.style.height = '100%';
     hudHaBgA.style.opacity = '0.95';
     hudHaBgA.style.horizontalAlign = 'left';
-    hudHaBgA.style.overflow =  ${isShort} ? 'noclip' : 'squish';
+    hudHaBgA.style.overflow =  'noclip';
 }
 
 for(var onDmg of hudHa.FindChildrenWithClassTraverse('hud-HA--on-damage'))

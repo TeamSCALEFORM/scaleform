@@ -1,6 +1,7 @@
 R"(
 var contextPanel = $.GetContextPanel();
 var textColor = ${isCt} ? '#B4BBBE' : '#D6C8B5';
+var mvpStar = 'https://cdn.discordapp.com/attachments/954389817536421908/957676079642980392/star.svg';
 var winpanelBackground = ${isCt} ? 'https://images2.imgbox.com/9b/a5/igisaPg8_o.png' : ${isT} ? 'https://images2.imgbox.com/c9/be/43gnCOjE_o.png' : 'https://images2.imgbox.com9b/a5/igisaPg8_o.png';
 if (${is2013})
     winpanelBackground = ${isCt} ? 'https://images2.imgbox.com/77/d5/T79ImP9g_o.png' : ${isT} ? 'https://images2.imgbox.com/26/56/eEUIVB7m_o.png' : 'https://images2.imgbox.com/77/d5/T79ImP9g_o.png';
@@ -36,7 +37,7 @@ for (var star of contextPanel.FindChildTraverse('HudWinPanel').FindChildrenWithC
         star.style.visibility = ${is2013} ?'collapse' : 'visible';
         star.style.marginTop = "25%";
         star.style.marginLeft = "-2px";
-        star.SetImage('https://cdn.discordapp.com/attachments/954389817536421908/957676079642980392/star.svg');
+        star.SetImage(mvpStar);
         star.style.transform = 'translateY(5px)';
     } else
     { 
@@ -100,6 +101,10 @@ if (!${is2013})
     funFact.style.x = '107px';
     funFact.style.marginTop = '5px';
     funFact.style.backgroundColor = '#000000CC';
+    funFact.style.verticalAlign = 'center';
+    funFact.style.textAlign = 'center';
+    funFact.style.paddingTop = '0px';
+    funFact.style.paddingLeft = '0px';
 }
 else
 {
