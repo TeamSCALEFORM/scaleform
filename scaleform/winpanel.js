@@ -43,7 +43,7 @@ if (${pendingMvp})
         playerName.style.marginTop = ${is2013} ? "15px" : "20px";
         playerName.style.color = ${isCt} ? "#717377" : "#8A7E6C";
         playerName.style.marginLeft = ${is2013} ? "-4px" : "2px";
-        playerName.style.fontSize = ${is2013 ? "22px" : "17px";
+        playerName.style.fontSize = ${is2013} ? "22px" : "17px";
         playerName.style.fontWeight = ${is2013} ? 'light' : 'bold';
         playerName.style.transform = 'translateY(5px)';
     }
