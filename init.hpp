@@ -29,16 +29,19 @@ struct context_t {
     memscan::mapped_region_t engine;
     memscan::mapped_region_t panorama;
     
-    struct interfaces_t {
+    struct interfaces_t 
+    {
         tsf::panorama_t *panorama;
         tsf::cvars_t *cvars;
     } i;
-    struct cvars_t {
+    struct cvars_t 
+    {
         tsf::cvar_t *cl_hud_color;
         tsf::cvar_t *cl_hud_background_alpha;
         tsf::cvar_t *cl_hud_healthammo_style;
     } c;
-    struct globals_t {
+    struct globals_t
+    {
         bool scf_on;
         bool old_wp;
     } g;

@@ -50,17 +50,30 @@ bool create_move::fn(tsf::player_t *self, void *edx, float input_sample_time, ts
     return ret;
 }
 
+#define DEBUG_EVENTS 0
 bool fire_event_intern::fn(void *self, void *edx, tsf::event_t *event, bool client, bool server)
 {
     if (!event)
         return og(self, edx, event, client, server);
     
+    const char *name = event->get_name();
+#if (DEBUG_EVENTS == 1)
+    DEBUG("%s\n", event->get_name());
+#endif
+    
     scaleform_on_event(event);
     
-    return og(self, edx, event, client, server);
+    bool ret = og(self, edx, event, client, server);
+    
+    // event is invalid after og
+    scaleform_after_event(name);
+    return ret;
 }
 
 // NOTE: can probably be done in scaleform_on_event
+// I wrote this a while ago and I don't want to test as of now
+// so I'll either get back to this part later or maybe a nice
+// contributor can do the testing :)
 void killfeed_update::fn(void *self, void *edx, tsf::event_t *event)
 {
     if (!event)

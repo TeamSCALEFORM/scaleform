@@ -13,12 +13,19 @@ JAVASCRIPT base =
 #include "base.js"
 ;
 
+JAVASCRIPT alerts =
+#include "alerts.js"
+;
+
+JAVASCRIPT teamcount_avatar =
+#include "teamcount_avatar.js"
+;
+
 // ${buyZone} - percentage
 #define BUYZONE "${buyZone}"
 JAVASCRIPT buyzone =
 #include "buyzone.js"
 ;
-
 
 // ${isShort} - is healthammo style short
 #define HEALTHAMMO_STYLE "${isShort}"
@@ -133,6 +140,16 @@ void ::scaleform_init()
     scf.pending_mvp = false;
 }
 
+static void scaleform_teamcount_avatar()
+{
+    tsf::ui_engine_t *engine = ctx.i.panorama->access_ui_engine();
+    if (!engine)
+        return LOG("Failed Scaleform Team Count event (ui engine)\n");
+    
+    DEBUG("Teamcount being edited!\n");
+    engine->run_script(scf.root, teamcount_avatar, CSGO_HUD_SCHEMA);
+}
+
 void ::scaleform_install()
 {
     if (!ctx.g.scf_on || scf.inited)
@@ -162,6 +179,9 @@ void ::scaleform_install()
     
     // install base modifications
     engine->run_script(scf.root, base, CSGO_HUD_SCHEMA);
+    
+    engine->run_script(scf.root, alerts, CSGO_HUD_SCHEMA);
+    scaleform_teamcount_avatar();
     
     scf.inited = true;
     LOG("Scaleform installed!\n");
@@ -280,6 +300,13 @@ void ::scaleform_on_event(tsf::event_t *event)
         scf.pending_mvp = true; // flag mvp
     else if (!strcmp(event->get_name(), "round_end"))
         scaleform_winpanel(event->get_int("winner"));
+}
+
+void ::scaleform_after_event(const char *name)
+{
+    if (!strcmp(name, "bot_takeover") || !strcmp(name, "switch_team") ||
+        !strcmp(name, "round_start"))
+        scaleform_teamcount_avatar();
 }
 
 void ::scaleform_on_death()

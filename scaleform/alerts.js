@@ -1,4 +1,4 @@
-R"(
+R"alert(
 var contextPanel = $.GetContextPanel();
 var joinPanelCTBG = "https://cdn.discordapp.com/attachments/808866622701830186/977922886042026015/Group_69.png";
 var joinPanelTBG = "https://cdn.discordapp.com/attachments/808866622701830186/977919617194418195/Group_66.png";
@@ -141,7 +141,7 @@ entryTextBot.style.marginLeft = '0%';
 
 // Top alerts (warmup, start etc)
 
-var hal = context_panel.FindChildTraverse('HudAlerts');
+var hal = contextPanel.FindChildTraverse('HudAlerts');
 hal.style.width = '883px';
 hal.style.height = '44px';
 hal.style.marginTop = '-40px';
@@ -149,14 +149,14 @@ hal.style.marginTop = '-40px';
 for (var hrbot of hal.FindChildrenWithClassTraverse('hrBot')) {hrbot.style.visibility = 'collapse';}
 for (var hrtop of hal.FindChildrenWithClassTraverse('hrTop')) {hrtop.style.visibility = 'collapse';}
 
-var hal = context_panel.FindChildTraverse('HudAlerts');
+var hal = contextPanel.FindChildTraverse('HudAlerts');
 hal.style.width = '883px';
 hal.style.height = '44px';
 hal.style.marginTop = '-40px';
 for (var hrbot of hal.FindChildrenWithClassTraverse('hrBot')) {hrbot.style.visibility = 'collapse';}
 for (var hrtop of hal.FindChildrenWithClassTraverse('hrTop')) {hrtop.style.visibility = 'collapse';}
 
-var alertText = context_panel.FindChildTraverse('AlertText');
+var alertText = contextPanel.FindChildTraverse('AlertText');
 alertText.style.opacity = '1';
 alertText.style.fontSize = '30px';
 alertText.style.fontWeight = 'bold';
@@ -165,7 +165,7 @@ alertText.style.fontFamily = 'Stratum2';
 alertText.style.letterSpacing = '0px';
 alertText.style.marginTop = '5px';
 
-var alertBg = context_panel.FindChildTraverse('AlertBg');
+var alertBg = contextPanel.FindChildTraverse('AlertBg');
 alertBg.style.opacity = '1';
 alertBg.style.height = '44px';
 alertBg.style.backgroundImage = 'url("https://images2.imgbox.com/e4/eb/FdasPVKZ_o.png")';
@@ -173,4 +173,4 @@ alertBg.style.backgroundImgOpacity = '0.95';
 alertBg.style.backgroundSize = '100% 100%';
 alertBg.style.backgroundRepeat = 'no-repeat';
 alertBg.style.backgroundColor = '#00000000';
-)"
+)alert"

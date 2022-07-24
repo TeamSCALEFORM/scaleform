@@ -161,7 +161,7 @@ follow_until(const ms_uptr_t copy, const ms_uptr_t start, const ms_uptr_t end,
         result.m_status == MS_FOLLOW_STATUS_OK) {
         ++match;
         address +=
-            find_bytes->m_direction == MS_FOLLOW_DIRECTION_BACKWARDS ? -1 : 1;
+        (find_bytes->m_direction == MS_FOLLOW_DIRECTION_BACKWARDS) ? -1 : 1;
         goto retry_label;
     }
     

@@ -32,5 +32,6 @@ void scaleform_init();
 void scaleform_install();
 void scaleform_tick(tsf::player_t *);
 void scaleform_on_event(tsf::event_t *);
+void scaleform_after_event(const char *);
 // special event
 void scaleform_on_death();

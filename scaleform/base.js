@@ -85,7 +85,7 @@ dashboardLabel.style.fontSize = '26px';
 dashboardLabel.style.letterSpacing = '-0.3px';
 
 // Teamcount (only score style)
-var hudTeamCounter = context_panel.FindChildTraverse('HudTeamCounter');
+var hudTeamCounter = contextPanel.FindChildTraverse('HudTeamCounter');
 hudTeamCounter.style.height = '100%';
 var aliveTextT = hudTeamCounter.FindChildTraverse('AliveTextT');
 var aliveTextCT = hudTeamCounter.FindChildTraverse('AliveTextCT');
@@ -113,38 +113,38 @@ var timer = hudTeamCounter.FindChildTraverse('TimerText');
 timer.style.fontFamily = 'Stratum2 Bold Monodigit';
 timer.style.marginTop = '-2px';
 timer.style.fontSize = '28px';
-for (var tAlive of context_panel.FindChildTraverse('HudTeamCounter').FindChildrenWithClassTraverse('TeamCounter__AliveT')){
+for (var tAlive of contextPanel.FindChildTraverse('HudTeamCounter').FindChildrenWithClassTraverse('TeamCounter__AliveT')){
     tAlive.style.backgroundImage = `url(${hudTeamCountBgT})`;   
 }
-for (var ctAlive of context_panel.FindChildTraverse('HudTeamCounter').FindChildrenWithClassTraverse('TeamCounter__AliveCT'))
+for (var ctAlive of contextPanel.FindChildTraverse('HudTeamCounter').FindChildrenWithClassTraverse('TeamCounter__AliveCT'))
 {
     ctAlive.style.backgroundImage = `url(${hudTeamCountBgCT})`;   
 }
-for (var scoreText of context_panel.FindChildTraverse('HudTeamCounter').FindChildrenWithClassTraverse('TeamCounter__AliveCount'))
+for (var scoreText of contextPanel.FindChildTraverse('HudTeamCounter').FindChildrenWithClassTraverse('TeamCounter__AliveCount'))
 {
     scoreText.style.color = '#ffffff';
 }
 
-var historyText = context_panel.FindChildTraverse('HudChat').FindChildTraverse('ChatHistoryText');
+var historyText = contextPanel.FindChildTraverse('HudChat').FindChildTraverse('ChatHistoryText');
 historyText.style.fontFamily = 'Stratum2';
 historyText.style.fontSize = '18px';
 historyText.style.fontWeight = 'lighter';
 historyText.style.letterSpacing = '0px';
 historyText.style.backgroundColor = '#000000CC';
 
-var textEntry = context_panel.FindChildTraverse('HudChat').FindChildTraverse('ChatTextEntryBox');
+var textEntry = contextPanel.FindChildTraverse('HudChat').FindChildTraverse('ChatTextEntryBox');
 textEntry.style.fontFamily = 'Stratum2';
 textEntry.style.fontSize = '18px';
 textEntry.style.fontWeight = 'lighter';
 textEntry.style.letterSpacing = '0px';
 
-var sendChat = context_panel.FindChildTraverse('HudChat').FindChildTraverse('ChatSendButton');
+var sendChat = contextPanel.FindChildTraverse('HudChat').FindChildTraverse('ChatSendButton');
 sendChat.style.fontFamily = 'Stratum2';
 sendChat.style.fontSize = '18px';
 sendChat.style.fontWeight = 'lighter';
 sendChat.style.letterSpacing = '0px';
 
-for(var sentChat of context_panel.FindChildrenWithClassTraverse('AlertText'))
+for(var sentChat of contextPanel.FindChildrenWithClassTraverse('AlertText'))
 {
      sentChat.style.backgroundColor = 'gradient( linear, 100% 0%, 0% 0%, from( #00000000 ), color-stop( 0.7, #00000077 ), to( #00000077 ) )';
      sentChat.style.textShadow = '1px 1px 2px #00000055';
