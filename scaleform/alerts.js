@@ -138,4 +138,39 @@ entryTextBot.style.overflow = 'noclip';
 entryTextBot.style.backgroundRepeat = 'no-repeat';
 entryTextBot.style.backgroundPosition = '40px -5px';
 entryTextBot.style.marginLeft = '0%';
+
+// Top alerts (warmup, start etc)
+
+var hal = context_panel.FindChildTraverse('HudAlerts');
+hal.style.width = '883px';
+hal.style.height = '44px';
+hal.style.marginTop = '-40px';
+
+for (var hrbot of hal.FindChildrenWithClassTraverse('hrBot')) {hrbot.style.visibility = 'collapse';}
+for (var hrtop of hal.FindChildrenWithClassTraverse('hrTop')) {hrtop.style.visibility = 'collapse';}
+
+var hal = context_panel.FindChildTraverse('HudAlerts');
+hal.style.width = '883px';
+hal.style.height = '44px';
+hal.style.marginTop = '-40px';
+for (var hrbot of hal.FindChildrenWithClassTraverse('hrBot')) {hrbot.style.visibility = 'collapse';}
+for (var hrtop of hal.FindChildrenWithClassTraverse('hrTop')) {hrtop.style.visibility = 'collapse';}
+
+var alertText = context_panel.FindChildTraverse('AlertText');
+alertText.style.opacity = '1';
+alertText.style.fontSize = '30px';
+alertText.style.fontWeight = 'bold';
+alertText.style.verticalAlign = 'center';
+alertText.style.fontFamily = 'Stratum2';
+alertText.style.letterSpacing = '0px';
+alertText.style.marginTop = '5px';
+
+var alertBg = context_panel.FindChildTraverse('AlertBg');
+alertBg.style.opacity = '1';
+alertBg.style.height = '44px';
+alertBg.style.backgroundImage = 'url("https://images2.imgbox.com/e4/eb/FdasPVKZ_o.png")';
+alertBg.style.backgroundImgOpacity = '0.95';
+alertBg.style.backgroundSize = '100% 100%';
+alertBg.style.backgroundRepeat = 'no-repeat';
+alertBg.style.backgroundColor = '#00000000';
 )"
