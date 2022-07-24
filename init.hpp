@@ -44,6 +44,7 @@ struct context_t {
     {
         bool scf_on;
         bool old_wp;
+        bool show_rarity;
     } g;
 } inline ctx;
 

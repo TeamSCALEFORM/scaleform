@@ -35,3 +35,4 @@ void scaleform_on_event(tsf::event_t *);
 void scaleform_after_event(const char *);
 // special event
 void scaleform_on_death();
+void scaleform_on_weapon_event();

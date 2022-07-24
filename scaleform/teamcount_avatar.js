@@ -15,24 +15,15 @@ function runner() {
     
     }
 
-    for(var clr of hudTeamCounter.FindChildrenWithClassTraverse('AvatarL__PlayerColor'))
-    {
-        clr.style.y = '-2px';
-        clr.style.width = '24px';
-        clr.style.height = '12px';
-        clr.style.marginLeft = '0px';
-        clr.style.horizontalAlign = 'center';
-        clr.style.imgShadow = '0px 0px 1px 1.0 #000000CC';
-    }
-
     for (var avatarClr of hudTeamCounter.FindChildrenWithClassTraverse('AvatarL__PlayerColor')) {
         avatarClr.style.y = '-2px';
         avatarClr.style.width = '24px';
         avatarClr.style.height = '12px';
-        avatarClr.style.marginLeft = '6px';
+        avatarClr.style.marginLeft = '0px';
         avatarClr.style.horizontalAlign = 'center';
         avatarClr.style.imgShadow = '0px 0px 1px 1.0 #000000CC';
     }
+
     for (avatarL of hudTeamCounter.FindChildrenWithClassTraverse('AvatarL__Internal')) {
         avatarL.style.height = '59px';
         avatarL.style.width = '85%';
@@ -143,6 +134,6 @@ function runner() {
     }
 }
 
-//$.Schedule(0.1, runner);
-runner();
+$.Schedule(0.3, runner);
+//runner();
 )"
