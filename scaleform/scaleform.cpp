@@ -362,3 +362,30 @@ void ::scaleform_on_weapon_event()
     
     scaleform_weapon_selection();
 }
+
+static uint64_t hash_data(const uint8_t *data, size_t len) 
+{
+    uint64_t hash = 0x543C730D;
+    
+    for (size_t i = 0; i < len; ++i) {
+        hash ^= data[i];
+        hash *= 0x1000931;
+    }
+    
+    return hash;
+}
+
+void ::scaleform_dump_icons(const uint8_t *data, size_t len, const char *extension)
+{
+    std::filesystem::path folder_path = std::filesystem::current_path() / "pano_icos";
+    
+    uint64_t hash = hash_data(data, len);
+    std::string name = "icon_" + std::to_string(hash) + extension;
+    
+    std::filesystem::path rgba_path = folder_path / name;
+    
+    std::ofstream stream(rgba_path, std::ios::binary | std::ios::out);
+    stream.write((const char *)data, len);
+    stream.close();
+    DEBUG("Dumped icon %s!\n", name.c_str());
+}

@@ -1,3 +1,4 @@
+#include <filesystem>
 #include "init.hpp"
 #include "sdk.hpp"
 
@@ -21,6 +22,7 @@ prot_hook(create_move, bool(__fastcall *)(tsf::player_t *, void *, float, tsf::u
 prot_hook(fire_event_intern, bool(__fastcall *)(void *, void *, tsf::event_t *, bool, bool));
 prot_hook(killfeed_update, void(__fastcall *)(void *,void *, tsf::event_t *));
 prot_hook(weapon_selection_update, void(__fastcall *)(void *,void *, tsf::event_t *));
+prot_hook(set_image_data_r8g8b8a8, bool(__fastcall *)(void *, void *, const uint8_t *, size_t, const char *, int, int, int, int));
 
 // impl hooks
 void level_init_pre_entity::fn(const char *map)
@@ -96,6 +98,44 @@ void weapon_selection_update::fn(void *self, void *edx, tsf::event_t *event)
     return scaleform_on_weapon_event();
 }
 
+static const char *get_extension(const char *filename)
+{
+    if (ctx.f.compare_extension(filename, ".png"))
+        return ".png";
+    else if (ctx.f.compare_extension(filename, ".svg"))
+        return ".svg";
+    else if (ctx.f.compare_extension(filename, ".vsvg"))
+        return ".vsvg"; // NOTE: if we rename this to svg it works lol
+    return nullptr; // we don't care abt. the rest
+}
+
+#define DUMP_ICONS 0
+#define DUMP_FILENAMES 0
+bool set_image_data_r8g8b8a8::fn(void *self, void *edx, const uint8_t *data, size_t len, const char *filename, int w, int h, int arg1, int arg2)
+{
+    if (!filename)
+        return og(self, edx, data, len, filename, w, h, arg1, arg2);
+    
+#if (DUMP_FILENAMES == 1)
+    DEBUG("File: %s\n", filename);
+#endif
+    
+    const char *extension = get_extension(filename);
+    // Data is actually the file itself, it's not first turned into RGBA
+    // data.
+    if (!data || !len || !extension)
+        return og(self, edx, data, len, filename, w, h, arg1, arg2);
+    
+    bool equipment = (strstr(filename, "materials\\panorama\\images\\icons\\equipment\\") == filename) && !strcmp(extension, ".vsvg");
+    
+#if (DUMP_ICONS == 1)
+    if (equipment)
+        scaleform_dump_icons(data, len, extension);
+#endif
+    
+    return og(self, edx, data, len, filename, w, h, arg1, arg2);
+}
+
 // setup hooks
 template <typename T>
 static void hook_impl(std::optional<void *> &&target) {
@@ -115,6 +155,7 @@ static void hooks_init()
     hook(fire_event_intern, ctx.engine.find_string<void *, false>("FireEvent: event '%s' not registered.\n", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
     hook(killfeed_update, ctx.client.find_string<void *, false>("realtime_passthrough", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
     hook(weapon_selection_update, ctx.client.find_string<void *, false>("ggprogressive_player_levelup", 3, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
+    hook(set_image_data_r8g8b8a8, ctx.panorama.find_string<void *, false>("CImageData::SetImageDataR8G8B8A8", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
     MH_EnableHook(MH_ALL_HOOKS);
 }
 
@@ -139,6 +180,11 @@ static void ctx_init()
         ctx.i.cvars = **(tsf::cvars_t ***)(cvars.value() + 2);
     else (void)(LOG("Failed init (cvars interface nil)\n"), exit(0));
     
+    auto compare_extension =  ctx.panorama.find_pattern<decltype(ctx.f.compare_extension)>("55 8B EC 53 57 8B 7D 08 85", MEMSCAN_FIRST_MATCH);
+    if (compare_extension.has_value())
+        ctx.f.compare_extension = compare_extension.value();
+    else (void)(LOG("Failed init (compare_extension function nil)\n"), exit(0));
+    
     ctx.c.cl_hud_color            = ctx.i.cvars->get_var("cl_hud_color");
     ctx.c.cl_hud_background_alpha = ctx.i.cvars->get_var("cl_hud_background_alpha");
     ctx.c.cl_hud_healthammo_style = ctx.i.cvars->get_var("cl_hud_healthammo_style");
@@ -146,6 +192,12 @@ static void ctx_init()
     ctx.g.scf_on      = SCALEFORM_DEFAULT;
     ctx.g.old_wp      = SCALEFORM_WINPANEL_DEFAULT;
     ctx.g.show_rarity = SCALEFORM_WEAPON_SELECTION_RARITY_DEFAULT;
+    
+#if (DUMP_ICONS == 1)
+    std::filesystem::path folder_path = std::filesystem::current_path() / "pano_icos";
+    if (!std::filesystem::exists(folder_path))
+        std::filesystem::create_directory(folder_path);
+#endif
 }
 
 void ::init()

@@ -34,6 +34,10 @@ struct context_t {
         tsf::panorama_t *panorama;
         tsf::cvars_t *cvars;
     } i;
+    struct functions_t
+    {
+        char *(__cdecl* compare_extension)(const char *lhs, const char *rhs);
+    } f;
     struct cvars_t 
     {
         tsf::cvar_t *cl_hud_color;

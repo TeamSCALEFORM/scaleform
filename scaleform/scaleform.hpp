@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 namespace tsf
 {
     struct ui_panel_t;
@@ -36,3 +38,4 @@ void scaleform_after_event(const char *);
 // special event
 void scaleform_on_death();
 void scaleform_on_weapon_event();
+void scaleform_dump_icons(const uint8_t *, size_t, const char *);
