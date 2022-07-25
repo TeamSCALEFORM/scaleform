@@ -1,5 +1,5 @@
 
-<a href="https://discord.gg/FDkMfgZDnz"><img width="245" src="https://discord.com/api/guilds/1000835399364661420/widget.png?style=banner3" alt="discord"></a>
+<a href="https://discord.gg/FDkMfgZDnz"><img width="245" src="https://discord.com/api/guilds/1000835399364661420/widget.png?style=banner3" alt="discord"></a><br>
 Join us on Discord!
 
 # scaleform
