@@ -21,6 +21,7 @@ BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID reserved)
         "making TeamSCALEFORM its own project\n"
         "isak: new JS, design\n"
         "jo: 2013 winpanel\n"
+        "0xSandman: promotion (taking credit for development)"
         "~~~~~~~~~~~~\n"
         "Refer to config.hpp for help\n"
         "NOTE: TeamSCALEFORM currently requires you disconnect\n"
