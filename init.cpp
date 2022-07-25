@@ -42,15 +42,14 @@ void level_shutdown::fn(void *self, void *edx)
 
 bool create_move::fn(tsf::player_t *self, void *edx, float input_sample_time, tsf::user_cmd_t *cmd)
 {
-    if (!self || !cmd || !cmd->get_command_number() || !input_sample_time)
+    if (!self || !cmd || cmd->get_command_number() == 0 || cmd->get_tick_count() == 0 || input_sample_time == 0.F)
         return og(self, edx, input_sample_time, cmd);
-    
-    bool ret = og(self, edx, input_sample_time, cmd);
     
     // TODO: This is not the ideal place for this...
     scaleform_tick(self);
     
-    return ret;
+    og(self, edx, input_sample_time, cmd);
+    return true;
 }
 
 #define DEBUG_EVENTS 0

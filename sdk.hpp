@@ -68,6 +68,11 @@ namespace tsf
         {
             return *(int*)((uintptr_t)this + 0x4);
         }
+        
+        int get_tick_count() 
+        {
+            return *(int*)((uintptr_t)this + 0x8);
+        }
     };
     
     struct cvar_t

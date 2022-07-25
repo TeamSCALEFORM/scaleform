@@ -6,7 +6,7 @@ var winpanelBackground = ${isCt} ? 'https://images2.imgbox.com/9b/a5/igisaPg8_o.
 if (${is2013})
     winpanelBackground = ${isCt} ? 'https://images2.imgbox.com/77/d5/T79ImP9g_o.png' : ${isT} ? 'https://images2.imgbox.com/26/56/eEUIVB7m_o.png' : 'https://images2.imgbox.com/77/d5/T79ImP9g_o.png';
 
-if($!{pendingMvp})
+if(!${pendingMvp})
 {
     winpanelBackground = ${isCt} ? 'https://cdn.discordapp.com/attachments/1001139177624178698/1001141660463403019/mvp.png' : ${isT} ? 'https://cdn.discordapp.com/attachments/1001139177624178698/1001141660153036872/mvp2.png' : 'https://cdn.discordapp.com/attachments/1001139177624178698/1001141660463403019/mvp.png';
 }
