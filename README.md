@@ -5,6 +5,8 @@ Join us on Discord!
 # scaleform
 A hackable and future-proof reimplementation of In-Game Scaleform HUD in CS:GO using Panorama. Written using C, C++ and JS.
 
+<img src="media/showcase.png" alt="showcase"></img>
+
 # Disclaimer
 We're not responsible for any potential VAC bans from using our project. Do not use this on any account you care about, unless you use `-insecure`, or respectively `sv_lan 1` on local servers.
 
