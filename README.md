@@ -31,7 +31,7 @@ The current known issues are:
 - Team Counter Avatars white outline is hackily implemented, thus has delays;
 - Weapon Selection boilerplate is also somewhat hackily implemented, therefore it may also have delays (not noticeable when you have rarity off);
 - Local Death Notices (local kill/death) background does not have transition properties, therefore we shorten the animation before they kick in (to 5 seconds, from originally 8).
-- Hints priority label is pushed to the right upon text overflow.
+- Hint Priority Label is pushed to the right upon text overflow.
 
 # TODO
 - Old Spectator HUD;
