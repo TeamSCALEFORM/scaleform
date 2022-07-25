@@ -34,6 +34,7 @@ The current known issues are:
 - Old Spectator HUD;
 - Support more gamemodes (eg. Deathmatch - currently you'll have a mix of new and old UI);
 - Fix Issues;
+- Prettify JS;
 - And more.
 
 # Main Menu
