@@ -20,6 +20,7 @@ prot_hook(level_shutdown, void(__fastcall *)(void *, void *));
 prot_hook(create_move, bool(__fastcall *)(tsf::player_t *, void *, float, tsf::user_cmd_t *));
 prot_hook(fire_event_intern, bool(__fastcall *)(void *, void *, tsf::event_t *, bool, bool));
 prot_hook(killfeed_update, void(__fastcall *)(void *,void *, tsf::event_t *));
+prot_hook(weapon_selection_update, void(__fastcall *)(void *,void *, tsf::event_t *));
 
 // impl hooks
 void level_init_pre_entity::fn(const char *map)
@@ -84,6 +85,17 @@ void killfeed_update::fn(void *self, void *edx, tsf::event_t *event)
     return scaleform_on_death();
 }
 
+// NOTE: ditto (weaponhud_selection)
+void weapon_selection_update::fn(void *self, void *edx, tsf::event_t *event)
+{
+    if (!event)
+        return og(self, edx, event);
+    
+    og(self, edx, event);
+    
+    return scaleform_on_weapon_event();
+}
+
 // setup hooks
 template <typename T>
 static void hook_impl(std::optional<void *> &&target) {
@@ -102,6 +114,7 @@ static void hooks_init()
     hook(create_move, ctx.client.find_pattern<void *>("55 8B EC 56 8B F1 57 8B 7D 0C 8B 8E", MEMSCAN_FIRST_MATCH));
     hook(fire_event_intern, ctx.engine.find_string<void *, false>("FireEvent: event '%s' not registered.\n", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
     hook(killfeed_update, ctx.client.find_string<void *, false>("realtime_passthrough", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
+    hook(weapon_selection_update, ctx.client.find_string<void *, false>("ggprogressive_player_levelup", 3, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
     MH_EnableHook(MH_ALL_HOOKS);
 }
 
@@ -130,8 +143,9 @@ static void ctx_init()
     ctx.c.cl_hud_background_alpha = ctx.i.cvars->get_var("cl_hud_background_alpha");
     ctx.c.cl_hud_healthammo_style = ctx.i.cvars->get_var("cl_hud_healthammo_style");
     
-    ctx.g.scf_on = SCALEFORM_DEFAULT;
-    ctx.g.old_wp = SCALEFORM_WINPANEL_DEFAULT;
+    ctx.g.scf_on      = SCALEFORM_DEFAULT;
+    ctx.g.old_wp      = SCALEFORM_WINPANEL_DEFAULT;
+    ctx.g.show_rarity = SCALEFORM_WEAPON_SELECTION_RARITY_DEFAULT;
 }
 
 void ::init()

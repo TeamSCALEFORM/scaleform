@@ -37,6 +37,12 @@ JAVASCRIPT deathnotices =
 #include "deathnotices.js"
 ;
 
+// ${showRarity} - whether to show rarity
+#define SHOW_RARITY "${showRarity}"
+JAVASCRIPT weapon_select =
+#include "weapon_select.js"
+;
+
 // ${isCt} - whether winner team is CT
 // ${isT} - whether winner team is T
 // ${pendingMvp} - there's a mvp for the round
@@ -150,6 +156,18 @@ static void scaleform_teamcount_avatar()
     engine->run_script(scf.root, teamcount_avatar, CSGO_HUD_SCHEMA);
 }
 
+static void scaleform_weapon_selection()
+{
+    tsf::ui_engine_t *engine = ctx.i.panorama->access_ui_engine();
+    if (!engine)
+        return LOG("Failed Scaleform Weapon Selection event (ui engine)\n");
+    
+    DEBUG("Weapon selection being edited!\n");
+    std::string js = weapon_select;
+    replace_str(js, SHOW_RARITY, ctx.g.show_rarity ? "true" : "false");
+    engine->run_script(scf.root, js.c_str(), CSGO_HUD_SCHEMA);
+}
+
 void ::scaleform_install()
 {
     if (!ctx.g.scf_on || scf.inited)
@@ -180,8 +198,12 @@ void ::scaleform_install()
     // install base modifications
     engine->run_script(scf.root, base, CSGO_HUD_SCHEMA);
     
+    // alerts
     engine->run_script(scf.root, alerts, CSGO_HUD_SCHEMA);
+    
+    // anticipate events
     scaleform_teamcount_avatar();
+    scaleform_weapon_selection();
     
     scf.inited = true;
     LOG("Scaleform installed!\n");
@@ -198,6 +220,10 @@ void ::scaleform_tick(tsf::player_t *local)
     {
         ctx.g.old_wp = !ctx.g.old_wp;
         LOG("Toggled Scaleform winpanel to %s\n", (ctx.g.old_wp ? "old" : "new"));
+    } else if (GetAsyncKeyState(SCALEFORM_WEAPON_SELECTION_RARITY_TOGGLE_KEY) & 1)
+    {
+        ctx.g.show_rarity = !ctx.g.show_rarity;
+        LOG("Toggled Scaleform Weapon Selection Rarity to %s\n", (ctx.g.show_rarity ? "on" : "off"));
     }
     
     tsf::ui_engine_t *engine = ctx.i.panorama->access_ui_engine();
@@ -304,9 +330,16 @@ void ::scaleform_on_event(tsf::event_t *event)
 
 void ::scaleform_after_event(const char *name)
 {
+    if (!scf.inited)
+        return;
+    
     if (!strcmp(name, "bot_takeover") || !strcmp(name, "switch_team") ||
-        !strcmp(name, "round_start"))
+        !strcmp(name, "round_start")) 
+    {
         scaleform_teamcount_avatar();
+        scaleform_weapon_selection();
+    } else if (!strcmp(name, "spec_target_updated") || !strcmp(name, "spec_mode_updated"))
+        scaleform_weapon_selection();
 }
 
 void ::scaleform_on_death()
@@ -319,6 +352,13 @@ void ::scaleform_on_death()
         return LOG("Failed Scaleform Death Notice event (ui engine)\n");
     
     DEBUG("Deathnotices being edited!\n");
-    
     engine->run_script(scf.root, deathnotices, CSGO_HUD_SCHEMA);
+}
+
+void ::scaleform_on_weapon_event()
+{
+    if (!scf.inited)
+        return;
+    
+    scaleform_weapon_selection();
 }
