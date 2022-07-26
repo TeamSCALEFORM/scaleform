@@ -22,16 +22,8 @@ We're not responsible for any potential VAC bans from using our project. Do not 
 - Future proof (does not require to be updated for code.pbin updates - unless it breaks any of the JavaScript itself);
 - Customizable (you can modify the CSS to your desires, and you can change keybinds and default states in `config.hpp`).
 
-# Issues
-The current known issues are:
-- Weapon Selection boilerplate does not support weapon switches when spectating someone (this includes POV demos);
-- Win Panels do not have the background white flash;
-- Win Panels have not been tested with music kits;
-- Team Counter does not support the bottom option;
-- Team Counter Avatars white outline is hackily implemented, thus has delays;
-- Weapon Selection boilerplate is also somewhat hackily implemented, therefore it may also have delays (not noticeable when you have rarity off);
-- Local Death Notices (local kill/death) background does not have transition properties, therefore we shorten the animation before they kick in (to 5 seconds, from originally 8).
-- Hint Priority Label is pushed to the right upon text overflow.
+# Known Issues
+Check the [Issues](https://github.com/TeamSCALEFORM/scaleform/issues) tab.
 
 # TODO
 - Old Spectator HUD;
