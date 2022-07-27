@@ -38,4 +38,5 @@ void scaleform_after_event(const char *);
 // special event
 void scaleform_on_death();
 void scaleform_on_weapon_event();
-void scaleform_dump_icons(const uint8_t *, size_t, const char *);
+void scaleform_dump_icons(const char *, const uint8_t *, size_t, const char *);
+bool scaleform_get_replacement_icon(const char *, const uint8_t *&, size_t &, int &, int &);
