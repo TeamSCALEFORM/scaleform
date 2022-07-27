@@ -97,6 +97,10 @@ void weapon_selection_update::fn(void *self, void *edx, tsf::event_t *event)
     return scaleform_on_weapon_event();
 }
 
+// false - vsvg
+// true - svg
+#define VSVG_OR_SVG true
+#define VSVG_EXT ((VSVG_OR_SVG) ? ".svg" : ".vsvg")
 static const char *get_extension(const char *filename)
 {
     if (ctx.f.compare_extension(filename, ".png"))
@@ -104,7 +108,7 @@ static const char *get_extension(const char *filename)
     else if (ctx.f.compare_extension(filename, ".svg"))
         return ".svg";
     else if (ctx.f.compare_extension(filename, ".vsvg"))
-        return ".vsvg"; // NOTE: if we rename this to svg it works lol
+        return VSVG_EXT;
     return nullptr; // we don't care abt. the rest
 }
 
@@ -114,6 +118,7 @@ bool set_image_data_r8g8b8a8::fn(void *self, void *edx, const uint8_t *data, siz
 {
     if (!filename)
         return og(self, edx, data, len, filename, w, h, arg1, arg2);
+    
     
 #if (DUMP_FILENAMES == 1)
     DEBUG("File: %s\n", filename);
@@ -125,12 +130,40 @@ bool set_image_data_r8g8b8a8::fn(void *self, void *edx, const uint8_t *data, siz
     if (!data || !len || !extension)
         return og(self, edx, data, len, filename, w, h, arg1, arg2);
     
-    bool equipment = (strstr(filename, "materials\\panorama\\images\\icons\\equipment\\") == filename) && !strcmp(extension, ".vsvg");
+    //DEBUG("extension: %s arg1: %d arg2: %d\n", extension, arg1, arg2);
+    constexpr const char eq_prefix[] = "materials\\panorama\\images\\icons\\equipment\\";
+    bool equipment = (strstr(filename, eq_prefix) == filename) && !strcmp(extension, VSVG_EXT);
     
-#if (DUMP_ICONS == 1)
     if (equipment)
-        scaleform_dump_icons(data, len, extension);
+    {
+        // gonna be written to by reference
+        const uint8_t *replacement_data;
+        size_t replacement_size;
+        int replacement_w, replacement_h;
+        
+        // name
+        char copy[256];
+        const char *start_ptr = &filename[sizeof(eq_prefix) - 1];
+        const char *end_ptr = strstr(start_ptr, ".vsvg");
+        size_t size = (size_t)end_ptr - (size_t)start_ptr;
+        DEBUG("%d\n", size);
+        strncpy(copy, start_ptr, size);
+        copy[size] = 0;
+        DEBUG("%s\n", copy);
+        
+#if (DUMP_ICONS == 1)
+        scaleform_dump_icons(copy, data, len, extension);
 #endif
+        
+        if (scaleform_get_replacement_icon(copy, replacement_data, replacement_size, replacement_w, replacement_h))
+        {
+            arg2 = 6;
+            DEBUG("!! replaced %s\n", copy);
+            return og(self, edx, replacement_data, replacement_size, filename, replacement_w, replacement_h, arg1, arg2);
+        } else {
+            DEBUG("!! didn't replace %s\n", copy);
+        }
+    }
     
     return og(self, edx, data, len, filename, w, h, arg1, arg2);
 }

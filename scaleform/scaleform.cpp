@@ -363,7 +363,7 @@ void ::scaleform_on_weapon_event()
     scaleform_weapon_selection();
 }
 
-static uint64_t hash_data(const uint8_t *data, size_t len) 
+constexpr static uint64_t hash_data(const char *data, size_t len) 
 {
     uint64_t hash = 0x543C730D;
     
@@ -375,12 +375,17 @@ static uint64_t hash_data(const uint8_t *data, size_t len)
     return hash;
 }
 
-void ::scaleform_dump_icons(const uint8_t *data, size_t len, const char *extension)
+template<auto V>
+struct ct_data
+{
+    constexpr static auto value = V;
+};
+
+void ::scaleform_dump_icons(const char *imgname, const uint8_t *data, size_t len, const char *extension)
 {
     std::filesystem::path folder_path = std::filesystem::current_path() / "pano_icos";
     
-    uint64_t hash = hash_data(data, len);
-    std::string name = "icon_" + std::to_string(hash) + extension;
+    std::string name = std::string("icon_") + imgname + extension;
     
     std::filesystem::path rgba_path = folder_path / name;
     
@@ -388,4 +393,44 @@ void ::scaleform_dump_icons(const uint8_t *data, size_t len, const char *extensi
     stream.write((const char *)data, len);
     stream.close();
     DEBUG("Dumped icon %s!\n", name.c_str());
+}
+
+
+// warning: A LOT OF DATA!
+#include "data.hpp"
+bool ::scaleform_get_replacement_icon(const char *name, const uint8_t *&data, size_t &len, int &w, int &h)
+{
+    uint64_t hash = hash_data(name, strlen(name));
+    switch (hash) {
+        case ct_data<hash_data(icon_m4a1_silencer_name, sizeof(icon_m4a1_silencer_name ) - 1)>::value:data = icon_m4a1_silencer; len = sizeof(icon_m4a1_silencer); w = icon_m4a1_silencer_w; h = icon_m4a1_silencer_h; return true; break;
+        case ct_data<hash_data(icon_m4a1_name, sizeof(icon_m4a1_name ) - 1)>::value:data = icon_m4a1; len = sizeof(icon_m4a1); w = icon_m4a1_w; h = icon_m4a1_h; return true; break;
+        case ct_data<hash_data(icon_knife_tactical_name, sizeof(icon_knife_tactical_name ) - 1)>::value:data = icon_knife_tactical; len = sizeof(icon_knife_tactical); w = icon_knife_tactical_w; h = icon_knife_tactical_h; return true; break;
+        case ct_data<hash_data(icon_knife_t_name, sizeof(icon_knife_t_name ) - 1)>::value:data = icon_knife_t; len = sizeof(icon_knife_t); w = icon_knife_t_w; h = icon_knife_t_h; return true; break;
+        case ct_data<hash_data(icon_knife_survival_bowie_name, sizeof(icon_knife_survival_bowie_name ) - 1)>::value:data = icon_knife_survival_bowie; len = sizeof(icon_knife_survival_bowie); w = icon_knife_survival_bowie_w; h = icon_knife_survival_bowie_h; return true; break;
+        case ct_data<hash_data(icon_knife_push_name, sizeof(icon_knife_push_name ) - 1)>::value:data = icon_knife_push; len = sizeof(icon_knife_push); w = icon_knife_push_w; h = icon_knife_push_h; return true; break;
+        case ct_data<hash_data(icon_knife_m9_bayonet_name, sizeof(icon_knife_m9_bayonet_name ) - 1)>::value:data = icon_knife_m9_bayonet; len = sizeof(icon_knife_m9_bayonet); w = icon_knife_m9_bayonet_w; h = icon_knife_m9_bayonet_h; return true; break;
+        case ct_data<hash_data(icon_knife_karambit_name, sizeof(icon_knife_karambit_name ) - 1)>::value:data = icon_knife_karambit; len = sizeof(icon_knife_karambit); w = icon_knife_karambit_w; h = icon_knife_karambit_h; return true; break;
+        case ct_data<hash_data(icon_knife_gut_name, sizeof(icon_knife_gut_name ) - 1)>::value:data = icon_knife_gut; len = sizeof(icon_knife_gut); w = icon_knife_gut_w; h = icon_knife_gut_h; return true; break;
+        case ct_data<hash_data(icon_knife_flip_name, sizeof(icon_knife_flip_name ) - 1)>::value:data = icon_knife_flip; len = sizeof(icon_knife_flip); w = icon_knife_flip_w; h = icon_knife_flip_h; return true; break;
+        case ct_data<hash_data(icon_knife_name, sizeof(icon_knife_name ) - 1)>::value:data = icon_knife; len = sizeof(icon_knife); w = icon_knife_w; h = icon_knife_h; return true; break;
+        case ct_data<hash_data(icon_knife_butterfly_name, sizeof(icon_knife_butterfly_name ) - 1)>::value:data = icon_knife_butterfly; len = sizeof(icon_knife_butterfly); w = icon_knife_butterfly_w; h = icon_knife_butterfly_h; return true; break;
+        case ct_data<hash_data(icon_bayonet_name, sizeof(icon_bayonet_name ) - 1)>::value:data = icon_bayonet; len = sizeof(icon_bayonet); w = icon_bayonet_w; h = icon_bayonet_h; return true; break;
+        case ct_data<hash_data(icon_incgrenade_name, sizeof(icon_incgrenade_name ) - 1)>::value:data = icon_incgrenade; len = sizeof(icon_incgrenade); w = icon_incgrenade_w; h = icon_incgrenade_h; return true; break;
+        case ct_data<hash_data(icon_hkp2000_name, sizeof(icon_hkp2000_name ) - 1)>::value:data = icon_hkp2000; len = sizeof(icon_hkp2000); w = icon_hkp2000_w; h = icon_hkp2000_h; return true; break;
+        case ct_data<hash_data(icon_hegrenade_name, sizeof(icon_hegrenade_name ) - 1)>::value:data = icon_hegrenade; len = sizeof(icon_hegrenade); w = icon_hegrenade_w; h = icon_hegrenade_h; return true; break;
+        case ct_data<hash_data(icon_flashbang_name, sizeof(icon_flashbang_name ) - 1)>::value:data = icon_flashbang; len = sizeof(icon_flashbang); w = icon_flashbang_w; h = icon_flashbang_h; return true; break;
+        case ct_data<hash_data(icon_elite_name, sizeof(icon_elite_name ) - 1)>::value:data = icon_elite; len = sizeof(icon_elite); w = icon_elite_w; h = icon_elite_h; return true; break;
+        case ct_data<hash_data(icon_decoy_name, sizeof(icon_decoy_name ) - 1)>::value:data = icon_decoy; len = sizeof(icon_decoy); w = icon_decoy_w; h = icon_decoy_h; return true; break;
+        case ct_data<hash_data(icon_deagle_name, sizeof(icon_deagle_name ) - 1)>::value:data = icon_deagle; len = sizeof(icon_deagle); w = icon_deagle_w; h = icon_deagle_h; return true; break;
+        case ct_data<hash_data(icon_awp_name, sizeof(icon_awp_name ) - 1)>::value:data = icon_awp; len = sizeof(icon_awp); w = icon_awp_w; h = icon_awp_h; return true; break;
+        case ct_data<hash_data(icon_ak47_name, sizeof(icon_ak47_name ) - 1)>::value:data = icon_ak47; len = sizeof(icon_ak47); w = icon_ak47_w; h = icon_ak47_h; return true; break;
+        case ct_data<hash_data(icon_ssg08_name, sizeof(icon_ssg08_name ) - 1)>::value:data = icon_ssg08; len = sizeof(icon_ssg08); w = icon_ssg08_w; h = icon_ssg08_h; return true; break;
+        case ct_data<hash_data(icon_smokegrenade_name, sizeof(icon_smokegrenade_name ) - 1)>::value:data = icon_smokegrenade; len = sizeof(icon_smokegrenade); w = icon_smokegrenade_w; h = icon_smokegrenade_h; return true; break;
+        case ct_data<hash_data(icon_molotov_name, sizeof(icon_molotov_name ) - 1)>::value:data = icon_molotov; len = sizeof(icon_molotov); w = icon_molotov_w; h = icon_molotov_h; return true; break;
+        case ct_data<hash_data(icon_mag7_name, sizeof(icon_mag7_name ) - 1)>::value:data = icon_mag7; len = sizeof(icon_mag7); w = icon_mag7_w; h = icon_mag7_h; return true; break;
+        case ct_data<hash_data(icon_m4a1_silencer_off_name, sizeof(icon_m4a1_silencer_off_name ) - 1)>::value:data = icon_m4a1_silencer_off; len = sizeof(icon_m4a1_silencer_off); w = icon_m4a1_silencer_off_w; h = icon_m4a1_silencer_off_h; return true; break;
+    }
+    
+    
+    return false;
 }
