@@ -157,12 +157,11 @@ bool set_image_data_r8g8b8a8::fn(void *self, void *edx, const uint8_t *data, siz
         
         if (scaleform_get_replacement_icon(copy, replacement_data, replacement_size, replacement_w, replacement_h))
         {
-            std::string name = filename;
-            name = name.substr(0, name.size() - 5);
-            name += ".png";
             arg2 = 2;
-            DEBUG("!! replaced %s replaced filename to %s!\n", copy, name.c_str());
-            return og(self, edx, replacement_data, replacement_size, name.c_str(), replacement_w, replacement_h, arg1, arg2);
+            DEBUG("!! replaced %s\n", copy);
+            return og(self, edx, replacement_data, replacement_size, filename, replacement_w, replacement_h, arg1, arg2);
+        } else {
+            DEBUG("!! didn't replace %s\n", copy);
         }
     }
     
