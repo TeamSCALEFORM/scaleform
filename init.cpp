@@ -157,7 +157,7 @@ bool set_image_data_r8g8b8a8::fn(void *self, void *edx, const uint8_t *data, siz
         
         if (scaleform_get_replacement_icon(copy, replacement_data, replacement_size, replacement_w, replacement_h))
         {
-            arg2 = 2;
+            arg2 = 6;
             DEBUG("!! replaced %s\n", copy);
             return og(self, edx, replacement_data, replacement_size, filename, replacement_w, replacement_h, arg1, arg2);
         } else {

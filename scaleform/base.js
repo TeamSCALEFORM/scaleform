@@ -1,23 +1,22 @@
 R"(
 var contextPanel = $.GetContextPanel();
 
-var hudBottomLeftImg = "https://images2.imgbox.com/ac/02/og3P1Xvp_o.png"
+var hudBottomRightImg = "https://images2.imgbox.com/ac/02/og3P1Xvp_o.png"
 var moneyBgImg = "https://images2.imgbox.com/a9/2f/lt6Pj1Mc_o.png"
 var dashboardLabelImg = "https://images2.imgbox.com/62/17/y3tvD95I_o.png"
 var hudTeamCountBgT = "https://images2.imgbox.com/0f/d5/fpNsbsSC_o.png";
 var hudTeamCountBgCT = "https://images2.imgbox.com/05/8f/f32nMOYd_o.png";
 
-var hudBottomLeft = contextPanel.FindChildTraverse('HudWeaponPanel').FindChildTraverse('WeaponPanelBottomBG');
-hudBottomLeft.style.backgroundImage = `url(${hudBottomLeftImg})`;	
-hudBottomLeft.style.backgroundColor = '#00000000';
-hudBottomLeft.style.backgroundSize = '100% 100%';
-hudBottomLeft.style.width = '312px';
-hudBottomLeft.style.height = '59px';
-hudBottomLeft.style.marginLeft = '37px';
-hudBottomLeft.style.marginTop = '-6px';
-hudBottomLeft.style.transform = 'translateX(-1px)';
-hudBottomLeft.style.overflow = 'noclip';
-hudBottomLeft.style.backgroundImgOpacity = '0.95';
+var hudBottomRight = contextPanel.FindChildTraverse('HudWeaponPanel').FindChildTraverse('WeaponPanelBottomBG');
+hudBottomRight.style.backgroundImage = `url(${hudBottomRightImg})`;	
+hudBottomRight.style.backgroundColor = '#00000000';
+hudBottomRight.style.backgroundSize = 'cover';
+hudBottomRight.style.width = '325px';
+hudBottomRight.style.height = '54px';
+hudBottomRight.style.marginLeft = '37px';
+hudBottomRight.style.marginTop = '0px';
+hudBottomRight.style.overflow = 'squish';
+hudBottomRight.style.backgroundImgOpacity = '0.95';
 
 var hudMoney = contextPanel.FindChildTraverse('HudMoney');
 // Background position is 0% by default which doesn't show

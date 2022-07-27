@@ -1,35 +1,40 @@
 R"weapsel(
 function runner() {
-    var contextPanel = $.GetContextPanel();
 
+
+    var contextPanel = $.GetContextPanel();
+    
     var hws = contextPanel.FindChildTraverse('HudWeaponSelection');
 
     for (select of hws.FindChildrenWithClassTraverse("weapon-selection-item")) {
         select.style.transform = 'translateY(0px)';
-        select.style.marginTop = '-3px';
+        select.style.marginTop = '3px';
         select.style.overflow = 'noclip';
         select.style.verticalAlign = 'center';
         for (text of select.FindChildrenWithClassTraverse('weapon-selection-item-name-text')) {
-            text.style.fontSize = '18px';
+            text.style.fontSize = '17px';
             text.style.fontFamily = 'Stratum2';
-            text.style.transform = 'translateY(-7px) translateX(8px)';
+            text.style.transform = 'translateY(-5px) translateX(5px)';
             text.style.fontWeight = 'bold';
         }
         for (icon of select.FindChildrenWithClassTraverse('weapon-selection-item-icon-main')) {
             icon.style.imgShadow = '#00000000 0px 0px 0px 0';
-            icon.style.uiScale = '123%';
+            icon.style.marginBottom = '5px';
+            icon.style.marginRight = '8px';
+            icon.style.marginLeft = '12px';
+            icon.style.padding = '5px';
         }
     }
 
     for (var row of hws.FindChildrenWithClassTraverse('weapon-row')) {
         if (row.BHasClass('weapon-row--selected')) {
-            row.style.overflow = 'noclip';
-            row.style.width = '319px';
-            row.style.height = '80px';
-            row.style.backgroundImage = 'url("https://images2.imgbox.com/c4/0a/huFilen8_o.png")';
+            row.style.overflow = 'squish';
+            row.style.width = '221px';
+            row.style.height = '83px';
+            row.style.backgroundImage = 'url("https://cdn.discordapp.com/attachments/808866622701830186/1001890355169476669/weapon_row_bg.png")';
             row.style.backgroundColor = '#00000000';
             row.style.backgroundSize = 'cover';
-            row.style.backgroundImgOpacity = '0.64';
+            row.style.backgroundImgOpacity = '0.7';
             row.style.transform = 'translateX(1px)';
             for (weapon_owned of row.FindChildrenWithClassTraverse('weapon-selection-item-name-text-owned')) {
                 weapon_owned.style.color = '#C9C9C9';
@@ -117,8 +122,6 @@ function runner() {
 
             }
         
-
-
         } else {
             row.style.backgroundImage = 'none';
 
@@ -133,15 +136,18 @@ function runner() {
                     }
                 }
             }
+
         }
         row.style.marginBottom = '15px';
     }
 
     for (var row of hws.FindChildrenWithClassTraverse('weapon-row-number')) {
-        row.style.fontSize = '18px';
+        row.style.fontSize = '16px';
         row.style.fontWeight = 'bold';
-        row.style.transform = 'translateY(-13px)';
+        row.style.transform = 'translateY(-5px)';
     }
+
+
 }
 
 $.Schedule(0.05, runner);
