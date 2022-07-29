@@ -65,14 +65,21 @@ for (var dnBackgroundg of contextPanel.FindChildrenWithClassTraverse('DeathNotic
 
 
 for (var dnIcon of contextPanel.FindChildrenWithClassTraverse('DeathNoticeIcon'))
-{
-	dnIcon.style.height = '20px';        
-		
+{		
 	dnIcon.style.verticalAlign = 'top';
-	dnIcon.style.transform = 'translateY(-1px) scaleY(.8) scaleX(.8)';
-	
+	if (dnIcon.id === "Weapon")
+	{
+		dnIcon.style.transform = 'translateY(5px)';
+		dnIcon.style.uiScale = "51%";
+	} else
+	{
+   	 dnIcon.style.height = '20px';
+		dnIcon.style.transform = 'translateY(0px) scaleY(.8) scaleX(.8)';
+    	dnIcon.style.uiScale = "100%";
+	}
 }
 
+    
 for (var dnT of contextPanel.FindChildrenWithClassTraverse('DeathNoticeTColor'))
 {
 	dnT.style.color = '#e8c56f';

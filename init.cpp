@@ -116,7 +116,7 @@ static const char *get_extension(const char *filename)
 #define DUMP_FILENAMES 0
 bool set_image_data_r8g8b8a8::fn(void *self, void *edx, const uint8_t *data, size_t len, const char *filename, int w, int h, int arg1, int arg2)
 {
-    if (!filename)
+    if (!ctx.g.scf_on || !filename)
         return og(self, edx, data, len, filename, w, h, arg1, arg2);
     
     
