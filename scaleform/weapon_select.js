@@ -36,6 +36,12 @@ function runner() {
             row.style.backgroundSize = 'cover';
             row.style.backgroundImgOpacity = '0.7';
             row.style.transform = 'translateX(1px)';
+            var items = row.FindChildrenWithClassTraverse("weapon-selection-item").length;
+            if(items > 1)
+            {
+                row.style.width = 221 + (30 * items) + "px";
+            }
+            row.style.transform = 'translateX(1px)';
             for (weapon_owned of row.FindChildrenWithClassTraverse('weapon-selection-item-name-text-owned')) {
                 weapon_owned.style.color = '#C9C9C9';
             }

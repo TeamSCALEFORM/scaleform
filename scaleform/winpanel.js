@@ -1,6 +1,7 @@
 R"(
 var contextPanel = $.GetContextPanel();
 var textColor = ${isCt} ? '#B4BBBE' : '#D6C8B5';
+
 var mvpStar = 'https://cdn.discordapp.com/attachments/954389817536421908/957676079642980392/star.svg';
 var winpanelBackground = ${isCt} ? 'https://images2.imgbox.com/9b/a5/igisaPg8_o.png' : ${isT} ? 'https://images2.imgbox.com/c9/be/43gnCOjE_o.png' : 'https://images2.imgbox.com9b/a5/igisaPg8_o.png';
 if (${is2013})
@@ -28,6 +29,7 @@ for (var winPanelBg of contextPanel.FindChildTraverse('HudWinPanel').FindChildre
     winPanelBg.style.backgroundImage = `url(${winpanelBackground})`;
     winPanelBg.style.backgroundSize = 'cover';
     winPanelBg.style.marginLeft = '105px';
+    winPanelBg.style.transitionProperty = 'brightness';
 }
 for (var teamTitle of contextPanel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('TeamFG__Title'))
 {
