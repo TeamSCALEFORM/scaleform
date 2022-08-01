@@ -37,6 +37,10 @@ JAVASCRIPT deathnotices =
 #include "deathnotices.js"
 ;
 
+JAVASCRIPT spectating =
+#include "spectating.js"
+;
+
 // ${showRarity} - whether to show rarity
 #define SHOW_RARITY "${showRarity}"
 JAVASCRIPT weapon_select =

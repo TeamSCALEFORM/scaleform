@@ -36,6 +36,29 @@ for(var spec_bottom_strip of contextPanel.FindChildrenWithClassTraverse('HudSpec
     spec_bottom_strip.style.transform = 'translateY(0px)';
 }
 
+for(var fix of contextPanel.FindChildrenWithClassTraverse('HudSpecplayer__ItemContainer'))
+{
+    fix.style.overflow = 'noclip'
+}
+
+for (var row of contextPanel.FindChildrenWithClassTraverse('weapon-row')) {
+    if (row.BHasClass('weapon-row--selected')) {
+        for(var x of row.FindChildrenWithClassTraverse('weapon-selection-item-name-text'))
+        {
+            for(var txt of contextPanel.FindChildrenWithClassTraverse('HudSpecplayer__ItemName'))
+            {
+                txt.text = x.text;
+                txt.style.visibility = 'visible';
+                txt.style.height = 'fit-children';
+                txt.style.verticalAlign = 'bottom';
+                txt.style.backgroundColor = '#00000000';
+                txt.style.transform = 'translateY(13px) translateX(-5px)';
+                txt.style.fontSize = '16px';
+                txt.style.fontWeight = 'light'
+            }
+        }
+    }
+}
 
 for(var spec_player_name of contextPanel.FindChildrenWithClassTraverse('HudSpecplayer__player-name'))
 {  
