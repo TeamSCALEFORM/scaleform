@@ -172,6 +172,16 @@ static void scaleform_weapon_selection()
     engine->run_script(scf.root, js.c_str(), CSGO_HUD_SCHEMA);
 }
 
+static void scaleform_spec()
+{
+    tsf::ui_engine_t *engine = ctx.i.panorama->access_ui_engine();
+    if (!engine)
+        return LOG("Failed Scaleform Spec event (ui engine)\n");
+    
+    DEBUG("Spec being edited!\n");
+    engine->run_script(scf.root, spectating, CSGO_HUD_SCHEMA);
+}
+
 void ::scaleform_install()
 {
     if (!ctx.g.scf_on || scf.inited)
@@ -208,6 +218,7 @@ void ::scaleform_install()
     // anticipate events
     scaleform_teamcount_avatar();
     scaleform_weapon_selection();
+    scaleform_spec();
     
     scf.inited = true;
     LOG("Scaleform installed!\n");
@@ -342,8 +353,11 @@ void ::scaleform_after_event(const char *name)
     {
         scaleform_teamcount_avatar();
         scaleform_weapon_selection();
-    } else if (!strcmp(name, "spec_target_updated") || !strcmp(name, "spec_mode_updated"))
+    } else if (!strcmp(name, "spec_target_updated") || !strcmp(name, "spec_mode_updated") || !strcmp(name, "item_equip"))
+    {
         scaleform_weapon_selection();
+        scaleform_spec();
+    }
 }
 
 void ::scaleform_on_death()

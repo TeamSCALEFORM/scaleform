@@ -41,23 +41,26 @@ for(var fix of contextPanel.FindChildrenWithClassTraverse('HudSpecplayer__ItemCo
     fix.style.overflow = 'noclip'
 }
 
-for (var row of contextPanel.FindChildrenWithClassTraverse('weapon-row')) {
-    if (row.BHasClass('weapon-row--selected')) {
-        for(var x of row.FindChildrenWithClassTraverse('weapon-selection-item-name-text'))
-        {
-            for(var txt of contextPanel.FindChildrenWithClassTraverse('HudSpecplayer__ItemName'))
-            {
-                txt.text = x.text;
-                txt.style.visibility = 'visible';
-                txt.style.height = 'fit-children';
-                txt.style.verticalAlign = 'bottom';
-                txt.style.backgroundColor = '#00000000';
-                txt.style.transform = 'translateY(13px) translateX(-5px)';
-                txt.style.fontSize = '16px';
-                txt.style.fontWeight = 'light'
-            }
-        }
-    }
+function updateText()
+{
+	for (var row of contextPanel.FindChildrenWithClassTraverse('weapon-row')) {
+    	if (row.BHasClass('weapon-row--selected')) {
+        	for(var x of row.FindChildrenWithClassTraverse('weapon-selection-item-name-text'))
+        	{
+            	for(var txt of contextPanel.FindChildrenWithClassTraverse('HudSpecplayer__ItemName'))
+            	{
+                	txt.text = x.text;
+                	txt.style.visibility = 'visible';
+                	txt.style.height = 'fit-children';
+                	txt.style.verticalAlign = 'bottom';
+                	txt.style.backgroundColor = '#00000000';
+                	txt.style.transform = 'translateY(13px) translateX(-5px)';
+                	txt.style.fontSize = '16px';
+                	txt.style.fontWeight = 'light'
+            	}
+        	}
+    	}
+	}
 }
 
 for(var spec_player_name of contextPanel.FindChildrenWithClassTraverse('HudSpecplayer__player-name'))
@@ -104,4 +107,6 @@ for(var spec_root_ct of contextPanel.FindChildrenWithClassTraverse('HudSpecplaye
         names.style.color = '#E5F8FF'
     }
 }
+
+$.Schedule(0.05, updateText);
 )"
