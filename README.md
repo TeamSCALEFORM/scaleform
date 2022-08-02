@@ -25,13 +25,6 @@ We're not responsible for any potential VAC bans from using our project. Do not 
 # Known Issues
 Check the [Issues](https://github.com/TeamSCALEFORM/scaleform/issues) tab.
 
-# TODO
-- Old Spectator HUD;
-- Support more gamemodes (eg. Deathmatch - currently you'll have a mix of new and old UI);
-- Fix Issues;
-- Prettify JS;
-- And more.
-
 # Main Menu
 If there's interest, and support, we're willing to kickstart progress towards replicating the Scaleform main-menu(s). Anyhow, before we divert any attention to that, there's much work left on the In-Game HUD.
 
