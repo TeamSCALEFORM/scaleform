@@ -22,7 +22,8 @@ for (select of hws.FindChildrenWithClassTraverse("weapon-selection-item")) {
 }
 
 for (row of hws.FindChildrenWithClassTraverse('weapon-row')) {
-    if (row.BHasClass('weapon-row--selected')) {
+//    if (row.BHasClass('weapon-row--selected')) 
+{
         for(test of row.FindChildrenWithClassTraverse('weapon-row-background'))
         {
             test.style.backgroundImage = 'url("https://cdn.discordapp.com/attachments/808866622701830186/1001890355169476669/weapon_row_bg.png")';

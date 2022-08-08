@@ -21,7 +21,6 @@ prot_hook(level_shutdown, void(__fastcall *)(void *, void *));
 prot_hook(create_move, bool(__fastcall *)(tsf::player_t *, void *, float, tsf::user_cmd_t *));
 prot_hook(fire_event_intern, bool(__fastcall *)(void *, void *, tsf::event_t *, bool, bool));
 prot_hook(killfeed_update, void(__fastcall *)(void *,void *, tsf::event_t *));
-prot_hook(weapon_selection_update, void(__fastcall *)(void *,void *, tsf::event_t *));
 prot_hook(set_image_data_r8g8b8a8, bool(__fastcall *)(void *, void *, const uint8_t *, size_t, const char *, int, int, int, int));
 
 // impl hooks
@@ -84,17 +83,6 @@ void killfeed_update::fn(void *self, void *edx, tsf::event_t *event)
     og(self, edx, event);
     
     return scaleform_on_death();
-}
-
-// NOTE: ditto (weaponhud_selection)
-void weapon_selection_update::fn(void *self, void *edx, tsf::event_t *event)
-{
-    if (!event)
-        return og(self, edx, event);
-    
-    og(self, edx, event);
-    
-    return scaleform_on_weapon_event();
 }
 
 // false - vsvg
@@ -186,7 +174,6 @@ static void hooks_init()
     hook(create_move, ctx.client.find_pattern<void *>("55 8B EC 56 8B F1 57 8B 7D 0C 8B 8E", MEMSCAN_FIRST_MATCH));
     hook(fire_event_intern, ctx.engine.find_string<void *, false>("FireEvent: event '%s' not registered.\n", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
     hook(killfeed_update, ctx.client.find_string<void *, false>("realtime_passthrough", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
-    hook(weapon_selection_update, ctx.client.find_string<void *, false>("ggprogressive_player_levelup", 3, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
     hook(set_image_data_r8g8b8a8, ctx.panorama.find_string<void *, false>("CImageData::SetImageDataR8G8B8A8", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
     MH_EnableHook(MH_ALL_HOOKS);
 }
