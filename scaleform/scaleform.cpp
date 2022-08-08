@@ -319,6 +319,10 @@ void ::scaleform_tick(tsf::player_t *local)
                  });
     
     // sorry for the very bad code
+    // NOTE(para): it's so bad that i felt the need to clarify
+    // for some reason valve really doesn't like this being stored on the
+    // stack.
+    // see here too 55 8B EC 83 3D ? ? ? ? ? 8B 15 ? ? ? ? 56 8B F1 C7 05
     auto vec = (tsf::utl_vector_t<tsf::ui_panel_t *> *)malloc(24); 
     memset(vec, 0, 24);
     scf.weap_sel->find_children_with_class_traverse("weapon-row", vec);
