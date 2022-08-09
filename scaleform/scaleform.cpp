@@ -359,7 +359,9 @@ void ::scaleform_on_event(tsf::event_t *event)
     
     if (!strcmp(event->get_name(), "round_mvp"))
         scf.pending_mvp = true; // flag mvp
-    else if (!strcmp(event->get_name(), "round_start"))
+    // NOTE(para): relying on item_equip for certainty isn't great but it's
+    // not going to be the downfall of anything.
+    else if (!strcmp(event->get_name(), "round_start") || !strcmp(event->get_name(), "item_equip"))
         scaleform_weapon_selection();
     else if (!strcmp(event->get_name(), "round_end"))
         scaleform_winpanel(event->get_int("winner"));
