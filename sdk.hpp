@@ -4,6 +4,16 @@
 
 namespace tsf
 {
+    template <typename T>
+        struct utl_vector_t
+    {
+        T *mem;
+        int alloc_count;
+        int grow_size;
+        int size;
+        T *els;
+    };
+    
     struct ui_panel_t
     {
         const char *get_id()
@@ -24,6 +34,11 @@ namespace tsf
         ui_panel_t *find_child_traverse(const char *name)
         {
             return ((ui_panel_t *(__thiscall *)(ui_panel_t *, const char *))((*(uintptr_t **)(this))[40]))(this, name);
+        }
+        
+        void find_children_with_class_traverse(const char *class_name, utl_vector_t<ui_panel_t *> *out)
+        {
+            return ((void(__thiscall *)(ui_panel_t *, const char *, utl_vector_t<ui_panel_t *> *))((*(uintptr_t **)(this))[302]))(this, class_name, out);
         }
     };
     

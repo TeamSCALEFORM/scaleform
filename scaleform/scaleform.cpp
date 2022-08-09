@@ -41,8 +41,6 @@ JAVASCRIPT spectating =
 #include "spectating.js"
 ;
 
-// ${showRarity} - whether to show rarity
-#define SHOW_RARITY "${showRarity}"
 JAVASCRIPT weapon_select =
 #include "weapon_select.js"
 ;
@@ -142,12 +140,13 @@ static tsf::ui_panel_t *get_panel(const char *id)
 
 void ::scaleform_init()
 {
-    scf.root = scf.weap_sel = nullptr;
+    scf.root = scf.weap_sel = scf.weap_pan_bg = nullptr;
     scf.inited = false;
     scf.old_color = scf.old_healthammo_style = -1;
     scf.old_alpha = -1.f;
     scf.old_in_buyzone = -1;
     scf.pending_mvp = false;
+    scf.old_weap_rows_count = 0;
 }
 
 static void scaleform_teamcount_avatar()
@@ -167,9 +166,7 @@ static void scaleform_weapon_selection()
         return LOG("Failed Scaleform Weapon Selection event (ui engine)\n");
     
     DEBUG("Weapon selection being edited!\n");
-    std::string js = weapon_select;
-    replace_str(js, SHOW_RARITY, ctx.g.show_rarity ? "true" : "false");
-    engine->run_script(scf.root, js.c_str(), CSGO_HUD_SCHEMA);
+    engine->run_script(scf.root, weapon_select, CSGO_HUD_SCHEMA);
 }
 
 static void scaleform_spec()
@@ -197,12 +194,19 @@ void ::scaleform_install()
     
     if (tsf::ui_panel_t *parent = scf.root->find_child_traverse("HudWeaponPanel"); parent)
     {
-        if (scf.weap_sel = parent->find_child_traverse("WeaponPanelBottomBG"); !scf.weap_sel)
+        if (scf.weap_pan_bg = parent->find_child_traverse("WeaponPanelBottomBG"); !scf.weap_pan_bg)
         {
-            return LOG("Failed Scaleform install (weapsel panel)\n");
+            return LOG("Failed Scaleform install (weap panel bg)\n");
         }
-    } else return LOG("Failed Scaleform install (weapsel parent)\n");
+    } else return LOG("Failed Scaleform install (weap panel)\n");
     
+    
+    if (scf.weap_sel = scf.root->find_child_traverse("HudWeaponSelection"); !scf.weap_sel)
+    {
+        return LOG("Failed Scaleform install (weap sel)\n");
+    }
+    
+    DEBUG("scf.weap_pan_bg = %p\n", scf.weap_pan_bg);
     DEBUG("scf.weap_sel = %p\n", scf.weap_sel);
     
     tsf::ui_engine_t *engine = ctx.i.panorama->access_ui_engine();
@@ -274,9 +278,9 @@ void ::scaleform_tick(tsf::player_t *local)
     
     // tick events
     
-    if (scf.weap_sel) {
+    if (scf.weap_pan_bg) {
         // make always visible (needs to be done in C++ for performance)
-        scf.weap_sel->set_visible(true);
+        scf.weap_pan_bg->set_visible(true);
     }
     
     UPDATING_VAR(scf.old_color, n, min(std::size(colors) - 1, ctx.c.cl_hud_color->get_int()),
@@ -313,6 +317,22 @@ void ::scaleform_tick(tsf::player_t *local)
                      replace_str(js, BUYZONE, n == 1 ? "100%" : "0%");
                      engine->run_script(scf.root, js.c_str(), CSGO_HUD_SCHEMA);
                  });
+    
+    // sorry for the very bad code
+    // NOTE(para): it's so bad that i felt the need to clarify
+    // for some reason valve really doesn't like this being stored on the
+    // stack.
+    // see here too 55 8B EC 83 3D ? ? ? ? ? 8B 15 ? ? ? ? 56 8B F1 C7 05
+    auto vec = (tsf::utl_vector_t<tsf::ui_panel_t *> *)malloc(24); 
+    memset(vec, 0, 24);
+    scf.weap_sel->find_children_with_class_traverse("weapon-row", vec);
+    int count = vec->size;
+    free(vec);
+    
+    UPDATING_VAR(scf.old_weap_rows_count, n, count, 
+                 {
+                     scaleform_weapon_selection();
+                 });
 }
 
 static void scaleform_winpanel(int team)
@@ -339,6 +359,8 @@ void ::scaleform_on_event(tsf::event_t *event)
     
     if (!strcmp(event->get_name(), "round_mvp"))
         scf.pending_mvp = true; // flag mvp
+    else if (!strcmp(event->get_name(), "round_start"))
+        scaleform_weapon_selection();
     else if (!strcmp(event->get_name(), "round_end"))
         scaleform_winpanel(event->get_int("winner"));
 }
@@ -354,10 +376,7 @@ void ::scaleform_after_event(const char *name)
         scaleform_teamcount_avatar();
         scaleform_weapon_selection();
     } else if (!strcmp(name, "spec_target_updated") || !strcmp(name, "spec_mode_updated") || !strcmp(name, "item_equip"))
-    {
-        scaleform_weapon_selection();
         scaleform_spec();
-    }
 }
 
 void ::scaleform_on_death()
@@ -371,14 +390,6 @@ void ::scaleform_on_death()
     
     DEBUG("Deathnotices being edited!\n");
     engine->run_script(scf.root, deathnotices, CSGO_HUD_SCHEMA);
-}
-
-void ::scaleform_on_weapon_event()
-{
-    if (!scf.inited)
-        return;
-    
-    scaleform_weapon_selection();
 }
 
 constexpr static uint64_t hash_data(const char *data, size_t len) 
