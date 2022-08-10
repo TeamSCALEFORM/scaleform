@@ -2,7 +2,13 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include "memscan/src/memscan/memscan.h"
+
+#include "sdk.hpp"
+
+#ifdef WIN32
 #include <windows.h>
+#endif
+
 #include <iomanip>
 #include <cstdlib>
 #include <type_traits>
@@ -36,7 +42,7 @@ struct context_t {
     } i;
     struct functions_t
     {
-        char *(__cdecl* compare_extension)(const char *lhs, const char *rhs);
+        char *(CDECL* compare_extension)(const char *lhs, const char *rhs);
     } f;
     struct cvars_t 
     {

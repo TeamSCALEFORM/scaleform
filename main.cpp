@@ -6,6 +6,7 @@
 #include <filesystem>
 #include "init.hpp"
 
+#ifdef WIN32
 BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID reserved)
 {
     if (reason != DLL_PROCESS_ATTACH)
@@ -14,6 +15,9 @@ BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID reserved)
     
     AllocConsole();
     freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
+#else
+static void __attribute__((constructor)) OnAttach( ) {
+#endif
     
     LOG("Created by cristeigabriel, with the help of:\n"
         "isak, jo and other public contributors\n"
@@ -36,5 +40,7 @@ BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID reserved)
     
     init();
     
+#ifdef WIN32
     return TRUE;
+#endif
 }

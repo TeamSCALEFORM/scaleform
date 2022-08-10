@@ -1,7 +1,13 @@
 #include <fstream>
 #include <filesystem>
 #include <string>
+
+#ifdef WIN32
 #include <minmax.h>
+#else
+#include <algorithm>
+#endif
+
 #include "scaleform.hpp"
 #include "../init.hpp"
 #include "../sdk.hpp"
@@ -138,7 +144,7 @@ static tsf::ui_panel_t *get_panel(const char *id)
 
 // internal
 
-void ::scaleform_init()
+void scaleform_init()
 {
     scf.root = scf.weap_sel = scf.weap_pan_bg = nullptr;
     scf.inited = false;
@@ -179,7 +185,7 @@ static void scaleform_spec()
     engine->run_script(scf.root, spectating, CSGO_HUD_SCHEMA);
 }
 
-void ::scaleform_install()
+void scaleform_install()
 {
     if (!ctx.g.scf_on || scf.inited)
         return;
@@ -228,18 +234,20 @@ void ::scaleform_install()
     LOG("Scaleform installed!\n");
 }
 
-void ::scaleform_tick(tsf::player_t *local)
+void scaleform_tick(tsf::player_t *local)
 {
+    static const Uint8 *state = SDL_GetKeyboardState(NULL);
+
     // listen to user commands
-    if (GetAsyncKeyState(SCALEFORM_TOGGLE_KEY) & 1)
+    if (GETASYNCKEYSTATE(SCALEFORM_TOGGLE_KEY) & 1)
     {
         ctx.g.scf_on = !ctx.g.scf_on;
         LOG("Toggled Scaleform %s\n", (ctx.g.scf_on ? "on" : "off"));
-    } else if (GetAsyncKeyState(SCALEFORM_WINPANEL_TOGGLE_KEY) & 1)
+    } else if (GETASYNCKEYSTATE(SCALEFORM_WINPANEL_TOGGLE_KEY) & 1)
     {
         ctx.g.old_wp = !ctx.g.old_wp;
         LOG("Toggled Scaleform winpanel to %s\n", (ctx.g.old_wp ? "old" : "new"));
-    } else if (GetAsyncKeyState(SCALEFORM_WEAPON_SELECTION_RARITY_TOGGLE_KEY) & 1)
+    } else if (GETASYNCKEYSTATE(SCALEFORM_WEAPON_SELECTION_RARITY_TOGGLE_KEY) & 1)
     {
         ctx.g.show_rarity = !ctx.g.show_rarity;
         LOG("Toggled Scaleform Weapon Selection Rarity to %s\n", (ctx.g.show_rarity ? "on" : "off"));
@@ -258,7 +266,7 @@ void ::scaleform_tick(tsf::player_t *local)
     } else if (!scf.inited || !ctx.g.scf_on) 
         return;
     
-    if (GetAsyncKeyState(SCALEFORM_JAVASCRIPT_LOADER_KEY) & 1)
+    if (GETASYNCKEYSTATE(SCALEFORM_JAVASCRIPT_LOADER_KEY) & 1)
     {
         std::filesystem::path js_path = std::filesystem::current_path() / "base.js";
         if (std::filesystem::exists(js_path))
@@ -283,7 +291,7 @@ void ::scaleform_tick(tsf::player_t *local)
         scf.weap_pan_bg->set_visible(true);
     }
     
-    UPDATING_VAR(scf.old_color, n, min(std::size(colors) - 1, ctx.c.cl_hud_color->get_int()),
+    UPDATING_VAR(scf.old_color, n, std::min((int)(std::size(colors) - 1), ctx.c.cl_hud_color->get_int()),
                  {
                      DEBUG("Changed hud color!\n");
                      std::string js = std::string(color);
@@ -292,7 +300,7 @@ void ::scaleform_tick(tsf::player_t *local)
                      engine->run_script(scf.root, js.c_str(), CSGO_HUD_SCHEMA);
                  });
     
-    UPDATING_VAR(scf.old_alpha, n, min(MAX_ALPHA, ctx.c.cl_hud_background_alpha->get_float()),
+    UPDATING_VAR(scf.old_alpha, n, std::min(MAX_ALPHA, ctx.c.cl_hud_background_alpha->get_float()),
                  {
                      DEBUG("Changed hud alpha!\n");
                      std::string js = std::string(alpha);
@@ -352,7 +360,7 @@ static void scaleform_winpanel(int team)
     scf.pending_mvp = false;
 }
 
-void ::scaleform_on_event(tsf::event_t *event)
+void scaleform_on_event(tsf::event_t *event)
 {
     if (!scf.inited)
         return;
@@ -367,7 +375,7 @@ void ::scaleform_on_event(tsf::event_t *event)
         scaleform_winpanel(event->get_int("winner"));
 }
 
-void ::scaleform_after_event(const char *name)
+void scaleform_after_event(const char *name)
 {
     if (!scf.inited)
         return;
@@ -381,7 +389,7 @@ void ::scaleform_after_event(const char *name)
         scaleform_spec();
 }
 
-void ::scaleform_on_death()
+void scaleform_on_death()
 {
     if (!scf.inited)
         return;
@@ -412,7 +420,7 @@ struct ct_data
     constexpr static auto value = V;
 };
 
-void ::scaleform_dump_icons(const char *imgname, const uint8_t *data, size_t len, const char *extension)
+void scaleform_dump_icons(const char *imgname, const uint8_t *data, size_t len, const char *extension)
 {
     std::filesystem::path folder_path = std::filesystem::current_path() / "pano_icos";
     
@@ -429,7 +437,7 @@ void ::scaleform_dump_icons(const char *imgname, const uint8_t *data, size_t len
 
 // warning: A LOT OF DATA!
 #include "data.hpp"
-bool ::scaleform_get_replacement_icon(const char *name, const uint8_t *&data, size_t &len, int &w, int &h)
+bool scaleform_get_replacement_icon(const char *name, const uint8_t *&data, size_t &len, int &w, int &h)
 {
     uint64_t hash = hash_data(name, strlen(name));
     switch (hash) {

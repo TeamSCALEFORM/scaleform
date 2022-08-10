@@ -1,6 +1,46 @@
 cmake_minimum_required(VERSION 3.21)
 project(TeamSCALEFORM)
 
+if (UNIX)
+
+# DEBUG or RELEASE
+set(CMAKE_BUILD_TYPE DEBUG)
+
+set(CMAKE_CXX_STANDARD 23)
+
+set(CMAKE_C_FLAGS "-march=native --no-gnu-unique")
+set(CMAKE_C_FLAGS_DEBUG "-g3")
+set(CMAKE_C_FLAGS_RELEASE "-O3 -s -fvisibility=hidden -DNDEBUG")
+
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fpermissive")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}")
+
+file(GLOB_RECURSE SRC
+	"memscan/src/memscan/util/util.c"
+	"memscan/src/memscan/memscan.c"
+
+	"scaleform/scaleform.cpp"
+
+	"init.cpp"
+	"main.cpp"
+)
+
+# These are for funchook
+add_compile_definitions(DISASM_DISTORM)
+add_compile_definitions(_GNU_SOURCE)
+
+find_package(SDL2 REQUIRED)
+
+include_directories(${SDL2_INCLUDE_DIRS})
+
+add_library("${CMAKE_PROJECT_NAME}" SHARED ${SRC})
+
+target_link_options("${CMAKE_PROJECT_NAME}" PRIVATE LINKER:--no-undefined)
+target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE ${SDL2_LIBRARIES})
+
+else()
+
 set(CMAKE_SYSTEM_PROCESSOR "i686")
 set(ARCH "x86")
 
@@ -37,3 +77,5 @@ add_definitions(-D_HAS_EXCEPTIONS=0) #for STL
 add_definitions(/MP) #multi-processor compilation
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/minhook/include")
+
+endif()

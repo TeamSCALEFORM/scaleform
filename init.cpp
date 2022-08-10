@@ -5,7 +5,9 @@
 #include "config.hpp"
 #include "scaleform/scaleform.hpp"
 
+#ifdef WIN32
 #include <minhook.h>
+#endif
 
 // hooks
 #define prot_hook(name, type)                     \
@@ -16,12 +18,12 @@ static inline fn_t* og;                   \
 };                          
 
 // decl hooks
-prot_hook(level_init_pre_entity, void(__stdcall *)(const char *));
-prot_hook(level_shutdown, void(__fastcall *)(void *, void *));
-prot_hook(create_move, bool(__fastcall *)(tsf::player_t *, void *, float, tsf::user_cmd_t *));
-prot_hook(fire_event_intern, bool(__fastcall *)(void *, void *, tsf::event_t *, bool, bool));
-prot_hook(killfeed_update, void(__fastcall *)(void *,void *, tsf::event_t *));
-prot_hook(set_image_data_r8g8b8a8, bool(__fastcall *)(void *, void *, const uint8_t *, size_t, const char *, int, int, int, int));
+prot_hook(level_init_pre_entity, void(STDCALL *)(const char *));
+prot_hook(level_shutdown, void(FASTCALL *)(void *, void *));
+prot_hook(create_move, bool(FASTCALL *)(tsf::player_t *, void *, float, tsf::user_cmd_t *));
+prot_hook(fire_event_intern, bool(FASTCALL *)(void *, void *, tsf::event_t *, bool, bool));
+prot_hook(killfeed_update, void(FASTCALL *)(void *,void *, tsf::event_t *));
+prot_hook(set_image_data_r8g8b8a8, bool(FASTCALL *)(void *, void *, const uint8_t *, size_t, const char *, int, int, int, int));
 
 // impl hooks
 void level_init_pre_entity::fn(const char *map)
@@ -159,34 +161,43 @@ bool set_image_data_r8g8b8a8::fn(void *self, void *edx, const uint8_t *data, siz
 // setup hooks
 template <typename T>
 static void hook_impl(std::optional<void *> &&target) {
+#ifdef WIN32
     if (target.has_value() &&
         (MH_CreateHook(target.value(), (void*)(&T::fn), (void**)(&T::og)) == MH_OK))
         LOG("Succesful hook at %p\n", target.value());
+#endif
+    if (1 == 2);
     else (void)(LOG("Failed hooking (address nil)\n"), exit(0));
 }
 #define hook(a, ...) hook_impl<a>(__VA_ARGS__)
 
 static void hooks_init()
 {
+#ifdef WIN32
     MH_Initialize();
+#endif
+
     hook(level_init_pre_entity, ctx.client.find_string<void *, false>("(mapname)", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
     hook(level_shutdown, ctx.client.find_string<void *, false>("(mapname)", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, 1, MS_FOLLOW_DIRECTION_FORWARDS));
     hook(create_move, ctx.client.find_pattern<void *>("55 8B EC 56 8B F1 57 8B 7D 0C 8B 8E", MEMSCAN_FIRST_MATCH));
     hook(fire_event_intern, ctx.engine.find_string<void *, false>("FireEvent: event '%s' not registered.\n", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
     hook(killfeed_update, ctx.client.find_string<void *, false>("realtime_passthrough", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
     hook(set_image_data_r8g8b8a8, ctx.panorama.find_string<void *, false>("CImageData::SetImageDataR8G8B8A8", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
+    
+#ifdef WIN32
     MH_EnableHook(MH_ALL_HOOKS);
+#endif
 }
 
 // setup ctx
 static void ctx_init()
 {
     using namespace memscan;
-    ctx.client   = mapped_region_t(GetModuleHandleA("client.dll"));
+    ctx.client   = mapped_region_t(GETMODULEHANDLE(CLIENT_DLL));
     LOG("client:   %x %x\n", ctx.client.get_start(), ctx.client.get_end());
-    ctx.engine   = mapped_region_t(GetModuleHandleA("engine.dll"));
+    ctx.engine   = mapped_region_t(GETMODULEHANDLE(ENGINE_DLL));
     LOG("engine:   %x %x\n", ctx.engine.get_start(), ctx.engine.get_end());
-    ctx.panorama = mapped_region_t(GetModuleHandleA("panorama.dll"));
+    ctx.panorama = mapped_region_t(GETMODULEHANDLE(PANORAMA_DLL));
     LOG("panorama: %x %x\n", ctx.panorama.get_start(), ctx.panorama.get_end());
     
     auto panorama = ctx.panorama.find_pattern<uintptr_t>("B9 CC CC CC CC 56 FF 50 40 8B", MEMSCAN_FIRST_MATCH);
@@ -219,7 +230,7 @@ static void ctx_init()
 #endif
 }
 
-void ::init()
+void init()
 {
     ctx_init();
     scaleform_init();

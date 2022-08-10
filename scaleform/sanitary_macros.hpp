@@ -10,4 +10,4 @@ if (old != goal_name)                         \
 on_update;                                \
 old = goal_name;                          \
 }                                             \
-}                                                 \
+}                                                 

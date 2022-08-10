@@ -442,7 +442,13 @@ static const ms_ubyte_t k_memscan_wildcard = 0xCC;
 #if __cplusplus
 #include <optional>
 #include <string>
+
+#ifdef WIN32
 #include <windows.h>
+#else
+#include <link.h>
+#include <cstring>
+#endif
 
 namespace memscan
 {
@@ -458,6 +464,7 @@ namespace memscan
         {
         }
         
+#ifdef WIN32
         [[nodiscard]] mapped_region_t(const HMODULE& module)
             : m_start(reinterpret_cast<ms_uptr_t>(module))
         {
@@ -478,10 +485,37 @@ namespace memscan
                 return;
             }
 #endif
-            
+
             m_end = m_start +
                 static_cast<ms_uptr_t>(nt_headers->OptionalHeader.SizeOfImage);
         }
+#else
+        [[nodiscard]] mapped_region_t(const char* module)
+        {
+            void** data = new void*[2];
+
+            data[0] = (void*)module;
+            data[1] = (void*)this;
+
+            dl_iterate_phdr(
+            [](struct dl_phdr_info* info, size_t, void* data) {
+                void** rdata = (void**)(data);
+                if (strstr(info->dlpi_name, (const char*)(rdata[0])) != 0) {
+                    struct mapped_region_t* mapped_region = (struct mapped_region_t*)(rdata[1]);
+
+                    mapped_region->m_start = info->dlpi_addr + info->dlpi_phdr[0].p_vaddr;
+                    mapped_region->m_end = mapped_region->m_start + info->dlpi_phdr[0].p_memsz;
+
+                    return 1;
+                }
+
+                return 0;
+            },
+            (void*)(data));
+
+            delete[] data;
+        }
+#endif
         
         /* implementations */
         
@@ -949,7 +983,9 @@ namespace memscan
         const auto get_start() const noexcept { return m_start; }
         const auto get_end() const noexcept { return m_end; }
         
+#ifdef WIN32
         private:
+#endif
         ms_uptr_t m_start;
         ms_uptr_t m_end;
     };
