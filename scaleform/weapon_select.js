@@ -17,7 +17,6 @@ for (select of hws.FindChildrenWithClassTraverse("weapon-selection-item")) {
         text.style.fontWeight = 'bold';
     }
     for (icon of select.FindChildrenWithClassTraverse('weapon-selection-item-icon-main')) {
-        icon.style.imgShadow = '#00000000 0px 0px 0px 0';
         icon.style.marginRight = '8px';
         icon.style.marginLeft = '12px';
         icon.style.padding = '5px';
