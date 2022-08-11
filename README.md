@@ -11,6 +11,7 @@ A hackable and future-proof reimplementation of In-Game Scaleform HUD in CS:GO u
 We're not responsible for any potential VAC bans from using our project. Do not use this on any account you care about, unless you use `-insecure`, or respectively `sv_lan 1` on local servers.
 
 # Features
+- **NEW: Cross-platform support! Not on main branch, track progress [here](https://github.com/TeamSCALEFORM/scaleform/pull/28)**;
 - JavaScript loader (load changes at run-time, on bind);
 - Toggle Scaleform at run-time, without restarting game (on keybind - you're currently required to disconnect after toggling off, not when toggling on);
 - Hot-swappable Win Panels (on keybind);
