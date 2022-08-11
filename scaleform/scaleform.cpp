@@ -239,15 +239,15 @@ void scaleform_tick(tsf::player_t *local)
     static const Uint8 *state = SDL_GetKeyboardState(NULL);
 
     // listen to user commands
-    if (GETASYNCKEYSTATE(SCALEFORM_TOGGLE_KEY) & 1)
+    if (GET_ASYNC_KEY_STATE(SCALEFORM_TOGGLE_KEY) & 1)
     {
         ctx.g.scf_on = !ctx.g.scf_on;
         LOG("Toggled Scaleform %s\n", (ctx.g.scf_on ? "on" : "off"));
-    } else if (GETASYNCKEYSTATE(SCALEFORM_WINPANEL_TOGGLE_KEY) & 1)
+    } else if (GET_ASYNC_KEY_STATE(SCALEFORM_WINPANEL_TOGGLE_KEY) & 1)
     {
         ctx.g.old_wp = !ctx.g.old_wp;
         LOG("Toggled Scaleform winpanel to %s\n", (ctx.g.old_wp ? "old" : "new"));
-    } else if (GETASYNCKEYSTATE(SCALEFORM_WEAPON_SELECTION_RARITY_TOGGLE_KEY) & 1)
+    } else if (GET_ASYNC_KEY_STATE(SCALEFORM_WEAPON_SELECTION_RARITY_TOGGLE_KEY) & 1)
     {
         ctx.g.show_rarity = !ctx.g.show_rarity;
         LOG("Toggled Scaleform Weapon Selection Rarity to %s\n", (ctx.g.show_rarity ? "on" : "off"));
@@ -266,7 +266,7 @@ void scaleform_tick(tsf::player_t *local)
     } else if (!scf.inited || !ctx.g.scf_on) 
         return;
     
-    if (GETASYNCKEYSTATE(SCALEFORM_JAVASCRIPT_LOADER_KEY) & 1)
+    if (GET_ASYNC_KEY_STATE(SCALEFORM_JAVASCRIPT_LOADER_KEY) & 1)
     {
         std::filesystem::path js_path = std::filesystem::current_path() / "base.js";
         if (std::filesystem::exists(js_path))
@@ -291,7 +291,7 @@ void scaleform_tick(tsf::player_t *local)
         scf.weap_pan_bg->set_visible(true);
     }
     
-    UPDATING_VAR(scf.old_color, n, std::min((int)(std::size(colors) - 1), ctx.c.cl_hud_color->get_int()),
+    UPDATING_VAR(scf.old_color, n, WIN32_LINUX_LITERAL(min, std::min)((int)(std::size(colors) - 1), ctx.c.cl_hud_color->get_int()),
                  {
                      DEBUG("Changed hud color!\n");
                      std::string js = std::string(color);
@@ -300,7 +300,7 @@ void scaleform_tick(tsf::player_t *local)
                      engine->run_script(scf.root, js.c_str(), CSGO_HUD_SCHEMA);
                  });
     
-    UPDATING_VAR(scf.old_alpha, n, std::min(MAX_ALPHA, ctx.c.cl_hud_background_alpha->get_float()),
+    UPDATING_VAR(scf.old_alpha, n, WIN32_LINUX_LITERAL(min, std::min)(MAX_ALPHA, ctx.c.cl_hud_background_alpha->get_float()),
                  {
                      DEBUG("Changed hud alpha!\n");
                      std::string js = std::string(alpha);
@@ -331,8 +331,9 @@ void scaleform_tick(tsf::player_t *local)
     // for some reason valve really doesn't like this being stored on the
     // stack.
     // see here too 55 8B EC 83 3D ? ? ? ? ? 8B 15 ? ? ? ? 56 8B F1 C7 05
-    auto vec = (tsf::utl_vector_t<tsf::ui_panel_t *> *)malloc(24); 
-    memset(vec, 0, 24);
+    constexpr size_t size = sizeof(tsf::utl_vector_t<tsf::ui_panel_t *>);
+    auto vec = (tsf::utl_vector_t<tsf::ui_panel_t *> *)malloc(size); 
+    memset(vec, 0, size);
     scf.weap_sel->find_children_with_class_traverse("weapon-row", vec);
     int count = vec->size;
     free(vec);

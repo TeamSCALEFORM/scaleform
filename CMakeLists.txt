@@ -16,6 +16,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -fpermissive")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}")
 
+# These are for funchook
+add_compile_definitions(DISASM_DISTORM)
+add_compile_definitions(_GNU_SOURCE)
+add_compile_definitions(_DEBUG)
+
 file(GLOB_RECURSE SRC
 	"memscan/src/memscan/util/util.c"
 	"memscan/src/memscan/memscan.c"
@@ -26,18 +31,19 @@ file(GLOB_RECURSE SRC
 	"main.cpp"
 )
 
-# These are for funchook
-add_compile_definitions(DISASM_DISTORM)
-add_compile_definitions(_GNU_SOURCE)
+file(GLOB_RECURSE FUNCHOOK_SOURCES "${CMAKE_SOURCE_DIR}/funchook/src/*.c")
 
 find_package(SDL2 REQUIRED)
 
 include_directories(${SDL2_INCLUDE_DIRS})
 
-add_library("${CMAKE_PROJECT_NAME}" SHARED ${SRC})
+add_library("${CMAKE_PROJECT_NAME}" SHARED ${SRC} ${FUNCHOOK_SOURCES})
 
 target_link_options("${CMAKE_PROJECT_NAME}" PRIVATE LINKER:--no-undefined)
 target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE ${SDL2_LIBRARIES})
+target_include_directories("${CMAKE_PROJECT_NAME}" PRIVATE
+    "${CMAKE_SOURCE_DIR}/funchook/include"
+)
 
 else()
 

@@ -3,24 +3,43 @@
 #include <cstdint>
 
 #ifdef WIN32
-#define WIN32_LINUX(x, y) x
+#define LINUX false
+
+#define WIN32_LINUX_LITERAL(x, y) x
 #define THISCALL __thiscall
 #define STDCALL __stdcall
 #define FASTCALL __fastcall
 #define CDECL __cdecl
-#define GETMODULEHANDLE(x) GetModuleHandleA(x)
+#define GET_MODULE_HANDLE(x) GetModuleHandleA(x)
+#define FASTCALL_ARGS void *self, void *edx
+#define FASTCALL_CALL self, edx
 #else
-#define WIN32_LINUX(x, y) y
+#define LINUX true
+
+#define WIN32_LINUX_LITERAL(x, y) y
 #define THISCALL
 #define STDCALL
 #define FASTCALL
 #define CDECL
-#define GETMODULEHANDLE(x) x
+#define GET_MODULE_HANDLE(x) x
+#define FASTCALL_ARGS void *self
+#define FASTCALL_CALL self
 #endif
 
-#define CLIENT_DLL WIN32_LINUX("client.dll", "csgo/bin/linux64/client_client.so")
-#define ENGINE_DLL WIN32_LINUX("engine.dll", "engine_client.so")
-#define PANORAMA_DLL WIN32_LINUX("panorama.dll", "panorama_gl_client.so")
+#define CLIENT_DLL WIN32_LINUX_LITERAL("client.dll", "csgo/bin/linux64/client_client.so")
+#define ENGINE_DLL WIN32_LINUX_LITERAL("engine.dll", "engine_client.so")
+#define PANORAMA_DLL WIN32_LINUX_LITERAL("panorama.dll", "panorama_gl_client.so")
+
+template <typename T>
+inline auto rel_to_abs(uintptr_t address) {
+    return (T)(address + 4 + *reinterpret_cast<int*>(address));
+}
+
+template <typename T>
+constexpr auto WIN32_LINUX(T&& lhs, T&& rhs)
+{
+    return LINUX ? rhs : lhs;
+}
 
 namespace tsf
 {
@@ -38,22 +57,22 @@ namespace tsf
     {
         const char *get_id()
         {
-            return ((const char *(THISCALL *)(ui_panel_t *))((*(uintptr_t **)(this))[9]))(this);
+            return ((const char *(THISCALL *)(ui_panel_t *))((*(uintptr_t **)(this))[WIN32_LINUX(9, 10)]))(this);
         }
         
         ui_panel_t* get_parent()
         {
-            return ((ui_panel_t *(THISCALL *)(ui_panel_t *))((*(uintptr_t **)(this))[25]))(this);
+            return ((ui_panel_t *(THISCALL *)(ui_panel_t *))((*(uintptr_t **)(this))[WIN32_LINUX(25, 26)]))(this);
         }
         
         void set_visible(bool to)
         {
-            return ((void(THISCALL *)(ui_panel_t *, bool))((*(uintptr_t **)(this))[27]))(this, to);
+            return ((void(THISCALL *)(ui_panel_t *, bool))((*(uintptr_t **)(this))[WIN32_LINUX(27, 28)]))(this, to);
         }
         
         ui_panel_t *find_child_traverse(const char *name)
         {
-            return ((ui_panel_t *(THISCALL *)(ui_panel_t *, const char *))((*(uintptr_t **)(this))[40]))(this, name);
+            return ((ui_panel_t *(THISCALL *)(ui_panel_t *, const char *))((*(uintptr_t **)(this))[WIN32_LINUX(40, 41)]))(this, name);
         }
         
         void find_children_with_class_traverse(const char *class_name, utl_vector_t<ui_panel_t *> *out)
@@ -66,18 +85,18 @@ namespace tsf
     {
         bool is_valid_panel_pointer(ui_panel_t const *panel)
         {
-            return ((bool(THISCALL *)(ui_engine_t *, ui_panel_t const *))((*(uintptr_t **)(this))[36]))(this, panel);
+            return ((bool(THISCALL *)(ui_engine_t *, ui_panel_t const *))((*(uintptr_t **)(this))[WIN32_LINUX(36, 37)]))(this, panel);
         }
         
         ui_panel_t *get_last_dispatched_event_target_panel()
         {
-            return ((ui_panel_t *(THISCALL *)(ui_engine_t *))((*(uintptr_t **)(this))[56]))(this);
+            return ((ui_panel_t *(THISCALL *)(ui_engine_t *))((*(uintptr_t **)(this))[WIN32_LINUX(56, 57)]))(this);
         }
         
         
         void run_script(ui_panel_t *panel, const char *js, const char *schema_path, int a5 = 8, int a6 = 10, bool a7 = false, bool a8 = false)
         {
-            return ((void(THISCALL *)(ui_engine_t *, ui_panel_t *, const char *, const char *, int, int, bool, bool))((*(uintptr_t **)(this))[113]))(this, panel, js, schema_path, a5, a6, a7, a8);
+            return ((void(THISCALL *)(ui_engine_t *, ui_panel_t *, const char *, const char *, int, int, bool, bool))((*(uintptr_t **)(this))[WIN32_LINUX(113, 114)]))(this, panel, js, schema_path, a5, a6, a7, a8);
         }
     };
     
@@ -93,33 +112,27 @@ namespace tsf
     {
         bool in_buyzone()
         {
-            return *(bool*)((uintptr_t)this + 0x99B5);
+            return *(bool*)((uintptr_t)this + WIN32_LINUX(0x99B5, 0xA2A9));
         }
     };
     
     struct user_cmd_t 
     {
-        int get_command_number() 
-        {
-            return *(int*)((uintptr_t)this + 0x4);
-        }
-        
-        int get_tick_count() 
-        {
-            return *(int*)((uintptr_t)this + 0x8);
-        }
+        void* vtable;
+        int command_number;
+        int tick_count;
     };
     
     struct cvar_t
     {
         float get_float() 
         {
-            return ((float(THISCALL *)(cvar_t *))((*(uintptr_t **)(this))[12]))(this);
+            return ((float(THISCALL *)(cvar_t *))((*(uintptr_t **)(this))[WIN32_LINUX(12, 15)]))(this);
         }
         
         int get_int() 
         {
-            return ((int(THISCALL *)(cvar_t *))((*(uintptr_t **)(this))[13]))(this);
+            return ((int(THISCALL *)(cvar_t *))((*(uintptr_t **)(this))[WIN32_LINUX(13, 16)]))(this);
         }
     };
     
@@ -135,12 +148,12 @@ namespace tsf
     {
         const char *get_name() 
         {
-            return ((const char *(THISCALL *)(event_t *))((*(uintptr_t **)(this))[1]))(this);
+            return ((const char *(THISCALL *)(event_t *))((*(uintptr_t **)(this))[WIN32_LINUX(1, 2)]))(this);
         }
         
         int get_int(const char *key, int def = 0) 
         {
-            return ((int(THISCALL *)(event_t *, const char *, int))((*(uintptr_t **)(this))[6]))(this, key, def);
+            return ((int(THISCALL *)(event_t *, const char *, int))((*(uintptr_t **)(this))[WIN32_LINUX(6, 7)]))(this, key, def);
         }
     };
 }

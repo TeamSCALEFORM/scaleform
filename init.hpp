@@ -55,6 +55,7 @@ struct context_t {
         bool scf_on;
         bool old_wp;
         bool show_rarity;
+        bool is_vulkan;
     } g;
 } inline ctx;
 

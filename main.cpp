@@ -3,6 +3,7 @@
 // 
 // ~TeamSCALEFORM~
 
+#include <thread>
 #include <filesystem>
 #include "init.hpp"
 
@@ -38,9 +39,14 @@ static void __attribute__((constructor)) OnAttach( ) {
         "~~~~~~~~~~~~\n",
         std::filesystem::current_path().string().c_str());
     
-    init();
+    
     
 #ifdef WIN32
+    init();
+
     return TRUE;
+#else
+    std::thread _{init};
+    _.detach();
 #endif
 }
