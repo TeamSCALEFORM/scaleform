@@ -52,6 +52,7 @@ cd scaleform
 cmake -G Ninja
 ninja
 ```
+You should now have a `libTeamSCALEFORM.so` in your current directory.
 
 # Ports
 We support ports of the boilerplate to software's APIs. If you developed a port of the scaleform boilerplate, open a pull request that links your repository under this comment.
