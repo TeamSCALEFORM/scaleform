@@ -1,6 +1,6 @@
 # verify platform
 if (NOT "${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
-  message(FATAL_ERROR "${PROJECT_NAME}: Your platform is currently not supported.")
+  message("${PROJECT_NAME}: Your platform is not officially supported.")
 endif()
 
 # verify compiler
