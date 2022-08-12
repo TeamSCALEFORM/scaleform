@@ -25,7 +25,6 @@ prot_hook(level_init_pre_entity, void(FASTCALL *)(FASTCALL_ARGS, const char *));
 prot_hook(level_shutdown, void(FASTCALL *)(FASTCALL_ARGS));
 prot_hook(create_move, bool(FASTCALL *)(FASTCALL_ARGS, float, tsf::user_cmd_t *));
 prot_hook(fire_event_intern, bool(FASTCALL *)(FASTCALL_ARGS, tsf::event_t *, bool, bool));
-prot_hook(killfeed_update, void(FASTCALL *)(FASTCALL_ARGS, tsf::event_t *));
 prot_hook(set_image_data_r8g8b8a8, bool(FASTCALL *)(FASTCALL_ARGS, const uint8_t *, uint32_t, const char *, int, int, void*, int));
 
 // impl hooks
@@ -74,20 +73,6 @@ bool fire_event_intern::fn(FASTCALL_ARGS, tsf::event_t *event, bool client, bool
     // event is invalid after og
     scaleform_after_event(name);
     return ret;
-}
-
-// NOTE: can probably be done in scaleform_on_event
-// I wrote this a while ago and I don't want to test as of now
-// so I'll either get back to this part later or maybe a nice
-// contributor can do the testing :)
-void killfeed_update::fn(FASTCALL_ARGS, tsf::event_t *event)
-{
-    if (!event)
-        return og(FASTCALL_CALL, event);
-    
-    og(FASTCALL_CALL, event);
-    
-    return scaleform_on_death();
 }
 
 // false - vsvg
@@ -140,7 +125,7 @@ bool set_image_data_r8g8b8a8::fn(FASTCALL_ARGS, const uint8_t *data, uint32_t le
         const char *end_ptr = strstr(start_ptr, ".vsvg");
         size_t size = (size_t)end_ptr - (size_t)start_ptr;
         DEBUG("%d\n", size);
-        strncpy(copy, start_ptr, size);
+        strncpy(copy, start_ptr, size); 
         copy[size] = 0;
         DEBUG("%s\n", copy);
         
@@ -193,7 +178,6 @@ static void hooks_init()
     hook(level_shutdown, ctx.client.find_string<void *, false>("(mapname)", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, 1, MS_FOLLOW_DIRECTION_FORWARDS));
     hook(create_move, ctx.client.find_pattern<void *>("55 8B EC 56 8B F1 57 8B 7D 0C 8B 8E", MEMSCAN_FIRST_MATCH));
     hook(fire_event_intern, ctx.engine.find_string<void *, false>("FireEvent: event '%s' not registered.\n", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
-    hook(killfeed_update, ctx.client.find_string<void *, false>("realtime_passthrough", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
     hook(set_image_data_r8g8b8a8, ctx.panorama.find_string<void *, false>("CImageData::SetImageDataR8G8B8A8", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
     
     MH_EnableHook(MH_ALL_HOOKS);
@@ -202,7 +186,6 @@ static void hooks_init()
     hook(level_shutdown, ctx.client.find_pattern<void *>("55 48 89 E5 41 54 49 89 FC 53 48 8B 1D CC CC CC CC 48 89 DF", MEMSCAN_FIRST_MATCH));
     hook(create_move, ctx.client.find_pattern<void *>("55 0F 28 C8 48 89 E5 41 54 49 89 F4", MEMSCAN_FIRST_MATCH));
     hook(fire_event_intern, rel_to_abs<void*>(ctx.engine.find_pattern<uintptr_t>("E9 CC CC CC CC 90 66 66 66 2E 0F 1F 84 CC CC CC CC CC 55 B9 CC CC CC CC", MEMSCAN_FIRST_MATCH).value() + 1));
-    hook(killfeed_update, (void*)(ctx.client.find_pattern<uintptr_t>("66 90 55 48 89 E5 41 55 49 89 FD 41 54 48 89 F7 53 48 89 F3", MEMSCAN_FIRST_MATCH).value() + 2));
     hook(set_image_data_r8g8b8a8, rel_to_abs<void*>(ctx.panorama.find_pattern<uintptr_t>("E8 CC CC CC CC 84 C0 41 88 44 24 CC", MEMSCAN_FIRST_MATCH).value() + 1));
 #endif
 }

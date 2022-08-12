@@ -239,7 +239,7 @@ void scaleform_tick(tsf::player_t *local)
 #ifdef __linux__
     static const Uint8 *state = SDL_GetKeyboardState(NULL);
 #endif
-
+    
     // listen to user commands
     if (GET_ASYNC_KEY_STATE(SCALEFORM_TOGGLE_KEY) & 1)
     {
@@ -378,6 +378,19 @@ void scaleform_on_event(tsf::event_t *event)
         scaleform_winpanel(event->get_int("winner"));
 }
 
+static void scaleform_death()
+{
+    if (!scf.inited)
+        return;
+    
+    tsf::ui_engine_t *engine = ctx.i.panorama->access_ui_engine();
+    if (!engine)
+        return LOG("Failed Scaleform Death Notice event (ui engine)\n");
+    
+    DEBUG("Deathnotices being edited!\n");
+    engine->run_script(scf.root, deathnotices, CSGO_HUD_SCHEMA);
+}
+
 void scaleform_after_event(const char *name)
 {
     if (!scf.inited)
@@ -390,19 +403,8 @@ void scaleform_after_event(const char *name)
         scaleform_weapon_selection();
     } else if (!strcmp(name, "spec_target_updated") || !strcmp(name, "spec_mode_updated") || !strcmp(name, "item_equip"))
         scaleform_spec();
-}
-
-void scaleform_on_death()
-{
-    if (!scf.inited)
-        return;
-    
-    tsf::ui_engine_t *engine = ctx.i.panorama->access_ui_engine();
-    if (!engine)
-        return LOG("Failed Scaleform Death Notice event (ui engine)\n");
-    
-    DEBUG("Deathnotices being edited!\n");
-    engine->run_script(scf.root, deathnotices, CSGO_HUD_SCHEMA);
+    else if (!strcmp(name, "player_death"))
+        scaleform_death();
 }
 
 constexpr static uint64_t hash_data(const char *data, size_t len) 
@@ -436,7 +438,6 @@ void scaleform_dump_icons(const char *imgname, const uint8_t *data, size_t len, 
     stream.close();
     DEBUG("Dumped icon %s!\n", name.c_str());
 }
-
 
 // warning: A LOT OF DATA!
 #include "data.hpp"

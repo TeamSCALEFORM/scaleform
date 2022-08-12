@@ -39,7 +39,5 @@ void scaleform_install();
 void scaleform_tick(tsf::player_t *);
 void scaleform_on_event(tsf::event_t *);
 void scaleform_after_event(const char *);
-// special event
-void scaleform_on_death();
 void scaleform_dump_icons(const char *, const uint8_t *, size_t, const char *);
 bool scaleform_get_replacement_icon(const char *, const uint8_t *&, size_t &, int &, int &);
