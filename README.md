@@ -6,12 +6,13 @@ Join us on Discord!
 A hackable and future-proof reimplementation of In-Game Scaleform HUD in CS:GO using Panorama. Written using C, C++ and JS.
 
 <img src="media/showcase.png" alt="showcase"></img>
+<img src="media/showcase_linux.png" alt="showcase"></img>
 
 # Disclaimer
 We're not responsible for any potential VAC bans from using our project. Do not use this on any account you care about, unless you use `-insecure`, or respectively `sv_lan 1` on local servers.
 
 # Features
-- **NEW: Cross-platform support! Not on main branch, track progress [here](https://github.com/TeamSCALEFORM/scaleform/pull/28)**;
+- **NEW: Cross-platform support!**;
 - JavaScript loader (load changes at run-time, on bind);
 - Toggle Scaleform at run-time, without restarting game (on keybind - you're currently required to disconnect after toggling off, not when toggling on);
 - Hot-swappable Win Panels (on keybind);
@@ -34,7 +35,7 @@ Even if you don't know C++, you can write your changes in JavaScript (relating t
 
 NOTE: Once you open your game, you'll be told where your custom JavaScript file is expected. If it is not found, and you press the Load JavaScript keybind, you'll be announced in the console.
 
-# Building
+# Building - Windows
 To build this project, you must install `CMake (>=3.21)`, `Ninja` and `Visual Studio 2022 Developer Tools`, then, open up `Developer Command Prompt for Visual Studio 2022`, go to the respective directory where your clone of this project is located (quick-tip: if your clone is located on a disk other than your start disk, you can modify the Developer Command Prompt 'Start In' flag, in properties), then write:
 
 `./build_release.bat` for release builds, or;
