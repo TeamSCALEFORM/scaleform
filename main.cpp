@@ -3,24 +3,19 @@
 // 
 // ~TeamSCALEFORM~
 
+#include <thread>
 #include <filesystem>
 #include "init.hpp"
 
-BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID reserved)
+static void run_init()
 {
-    if (reason != DLL_PROCESS_ATTACH)
-        return FALSE;
-    (void)(reserved);
-    
-    AllocConsole();
-    freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
-    
     LOG("Created by cristeigabriel, with the help of:\n"
         "isak, jo and other public contributors\n"
         "cristeigabriel: reverse engineering, boilerplate, original JS,\n"
         "making TeamSCALEFORM its own project\n"
         "isak: new JS, design\n"
         "jo: 2013 winpanel\n"
+        "bruhmoment21: Linux port\n"
         "~~~~~~~~~~~~\n"
         "Refer to config.hpp for help\n"
         "NOTE: TeamSCALEFORM currently requires you disconnect\n"
@@ -34,7 +29,26 @@ BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID reserved)
         "~~~~~~~~~~~~\n",
         std::filesystem::current_path().string().c_str());
     
-    init();
+    ::init();
+}
+
+#ifdef WIN32
+BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID reserved)
+{
+    if (reason != DLL_PROCESS_ATTACH)
+        return FALSE;
+    (void)(reserved);
     
+    AllocConsole();
+    freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
+    
+    run_init();
     return TRUE;
 }
+#else
+static void __attribute__((constructor)) attach() 
+{
+    std::thread _{run_init};
+    _.detach();
+}
+#endif
