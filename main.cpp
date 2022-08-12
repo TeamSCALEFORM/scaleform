@@ -7,25 +7,15 @@
 #include <filesystem>
 #include "init.hpp"
 
-#ifdef WIN32
-BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID reserved)
+static void run_init()
 {
-    if (reason != DLL_PROCESS_ATTACH)
-        return FALSE;
-    (void)(reserved);
-    
-    AllocConsole();
-    freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
-#else
-static void __attribute__((constructor)) OnAttach( ) {
-#endif
-    
     LOG("Created by cristeigabriel, with the help of:\n"
         "isak, jo and other public contributors\n"
         "cristeigabriel: reverse engineering, boilerplate, original JS,\n"
         "making TeamSCALEFORM its own project\n"
         "isak: new JS, design\n"
         "jo: 2013 winpanel\n"
+        "bruhmoment21: Linux port\n"
         "~~~~~~~~~~~~\n"
         "Refer to config.hpp for help\n"
         "NOTE: TeamSCALEFORM currently requires you disconnect\n"
@@ -39,14 +29,26 @@ static void __attribute__((constructor)) OnAttach( ) {
         "~~~~~~~~~~~~\n",
         std::filesystem::current_path().string().c_str());
     
-    
-    
-#ifdef WIN32
-    init();
-
-    return TRUE;
-#else
-    std::thread _{init};
-    _.detach();
-#endif
+    ::init();
 }
+
+#ifdef WIN32
+BOOL APIENTRY DllMain(HMODULE module, DWORD reason, LPVOID reserved)
+{
+    if (reason != DLL_PROCESS_ATTACH)
+        return FALSE;
+    (void)(reserved);
+    
+    AllocConsole();
+    freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);
+    
+    run_init();
+    return TRUE;
+}
+#else
+static void __attribute__((constructor)) attach() 
+{
+    std::thread _{run_init};
+    _.detach();
+}
+#endif

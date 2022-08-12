@@ -112,7 +112,7 @@ bool set_image_data_r8g8b8a8::fn(FASTCALL_ARGS, const uint8_t *data, uint32_t le
     if (!ctx.g.scf_on || !filename)
         return og(FASTCALL_CALL, data, len, filename, w, h, arg1, arg2);
     
-
+    
 #if (DUMP_FILENAMES == 1)
     DEBUG("File: %s\n", filename);
 #endif
@@ -163,22 +163,21 @@ bool set_image_data_r8g8b8a8::fn(FASTCALL_ARGS, const uint8_t *data, uint32_t le
 
 // setup hooks
 template <typename T>
-static void hook_impl(std::optional<void *> &&target) {
+static void hook_impl(std::optional<void *> &&target) 
+{
 #ifdef WIN32
     if (target.has_value() &&
         (MH_CreateHook(target.value(), (void*)(&T::fn), (void**)(&T::og)) == MH_OK))
         LOG("Succesful hook at %p\n", target.value());
 #else
-    if (target.has_value()) {
+    if (target.has_value()) 
+    {
         T::fh = funchook_create();
         
         T::og = (decltype(T::og))(target.value());
-
-        if (T::fh && funchook_prepare(T::fh, (void**)(&T::og), (void*)(T::fn)) == 0) {
-            if (funchook_install(T::fh, 0) == 0) {
-                LOG("Succesful hook at %p\n", target.value());
-            }
-        }
+        
+        if (T::fh && (funchook_prepare(T::fh, (void**)(&T::og), (void*)(T::fn)) == 0) && (funchook_install(T::fh, 0) == 0)) 
+            LOG("Succesful hook at %p\n", target.value());
     }
 #endif
     else (void)(LOG("Failed hooking (address nil)\n"), exit(0));
@@ -189,14 +188,14 @@ static void hooks_init()
 {
 #ifdef WIN32
     MH_Initialize();
-
+    
     hook(level_init_pre_entity, ctx.client.find_string<void *, false>("(mapname)", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
     hook(level_shutdown, ctx.client.find_string<void *, false>("(mapname)", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, 1, MS_FOLLOW_DIRECTION_FORWARDS));
     hook(create_move, ctx.client.find_pattern<void *>("55 8B EC 56 8B F1 57 8B 7D 0C 8B 8E", MEMSCAN_FIRST_MATCH));
     hook(fire_event_intern, ctx.engine.find_string<void *, false>("FireEvent: event '%s' not registered.\n", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
     hook(killfeed_update, ctx.client.find_string<void *, false>("realtime_passthrough", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
     hook(set_image_data_r8g8b8a8, ctx.panorama.find_string<void *, false>("CImageData::SetImageDataR8G8B8A8", MEMSCAN_FIRST_MATCH, {0x55, 0x8b, 0xec}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS));
-
+    
     MH_EnableHook(MH_ALL_HOOKS);
 #else
     hook(level_init_pre_entity, ctx.client.find_pattern<void *>("55 48 89 E5 53 48 89 F3 48 83 EC 08 C6 05 CC CC CC CC CC", MEMSCAN_FIRST_MATCH));
@@ -213,12 +212,13 @@ static void ctx_init()
 {
 #ifdef __linux__
     void* panorama_vk = dlopen("panorama_client.so", RTLD_LAZY | RTLD_NOLOAD);
-    if (panorama_vk) {
+    if (panorama_vk) 
+    {
         ctx.g.is_vulkan = true;
         dlclose(panorama_vk);
     }
 #endif
-
+    
     using namespace memscan;
     ctx.client   = mapped_region_t(GET_MODULE_HANDLE(CLIENT_DLL));
     LOG("client:   %x %x\n", ctx.client.get_start(), ctx.client.get_end());
@@ -234,13 +234,12 @@ static void ctx_init()
 #else
     // there is a different panorama lib for vulkan
     auto panorama_gl = ctx.panorama.find_pattern<uintptr_t>("48 8B 05 CC CC CC CC 48 8D 1D CC CC CC CC", MEMSCAN_FIRST_MATCH);
-
-    if (panorama_gl.has_value()){
+    
+    if (panorama_gl.has_value())
         ctx.i.panorama = **rel_to_abs<tsf::panorama_t ***>(panorama_gl.value() + 3);
-    }
 #endif
     else (void)(LOG("Failed init (panorama interface nil)\n"), exit(0));
-
+    
 #ifdef WIN32
     auto cvars = ctx.engine.find_string<uintptr_t, false>("sv_skyname", 3, {0x8b, 0x0d}, MEMSCAN_FIRST_MATCH, MS_FOLLOW_DIRECTION_BACKWARDS);
     if (cvars.has_value())

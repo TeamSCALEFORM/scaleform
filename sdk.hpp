@@ -2,6 +2,11 @@
 
 #include <cstdint>
 
+// NOTE(para): minwindef.h
+#ifdef CDECL
+#undef CDECL
+#endif
+
 #ifdef WIN32
 #define LINUX false
 
@@ -32,7 +37,8 @@
 #define PANORAMA_DLL WIN32_LINUX_LITERAL("panorama.dll", OPENGL_VULKAN("panorama_gl_client.so", "panorama_client.so"))
 
 template <typename T>
-inline auto rel_to_abs(uintptr_t address) {
+inline auto rel_to_abs(uintptr_t address) 
+{
     return (T)(address + 4 + *reinterpret_cast<int*>(address));
 }
 
