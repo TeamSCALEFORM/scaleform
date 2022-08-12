@@ -24,11 +24,12 @@
 #define GET_MODULE_HANDLE(x) x
 #define FASTCALL_ARGS void *self
 #define FASTCALL_CALL self
+#define OPENGL_VULKAN(x, y) !ctx.g.is_vulkan ? x : y
 #endif
 
 #define CLIENT_DLL WIN32_LINUX_LITERAL("client.dll", "csgo/bin/linux64/client_client.so")
 #define ENGINE_DLL WIN32_LINUX_LITERAL("engine.dll", "engine_client.so")
-#define PANORAMA_DLL WIN32_LINUX_LITERAL("panorama.dll", "panorama_gl_client.so")
+#define PANORAMA_DLL WIN32_LINUX_LITERAL("panorama.dll", OPENGL_VULKAN("panorama_gl_client.so", "panorama_client.so"))
 
 template <typename T>
 inline auto rel_to_abs(uintptr_t address) {

@@ -26,7 +26,7 @@ prot_hook(level_shutdown, void(FASTCALL *)(FASTCALL_ARGS));
 prot_hook(create_move, bool(FASTCALL *)(FASTCALL_ARGS, float, tsf::user_cmd_t *));
 prot_hook(fire_event_intern, bool(FASTCALL *)(FASTCALL_ARGS, tsf::event_t *, bool, bool));
 prot_hook(killfeed_update, void(FASTCALL *)(FASTCALL_ARGS, tsf::event_t *));
-prot_hook(set_image_data_r8g8b8a8, bool(FASTCALL *)(FASTCALL_ARGS, const uint8_t *, size_t, const char *, int, int, int, int));
+prot_hook(set_image_data_r8g8b8a8, bool(FASTCALL *)(FASTCALL_ARGS, const uint8_t *, uint32_t, const char *, int, int, void*, int));
 
 // impl hooks
 void level_init_pre_entity::fn(FASTCALL_ARGS, const char *map)
@@ -107,12 +107,12 @@ static const char *get_extension(const char *filename)
 
 #define DUMP_ICONS 0
 #define DUMP_FILENAMES 0
-bool set_image_data_r8g8b8a8::fn(FASTCALL_ARGS, const uint8_t *data, size_t len, const char *filename, int w, int h, int arg1, int arg2)
+bool set_image_data_r8g8b8a8::fn(FASTCALL_ARGS, const uint8_t *data, uint32_t len, const char *filename, int w, int h, void* arg1, int arg2)
 {
     if (!ctx.g.scf_on || !filename)
         return og(FASTCALL_CALL, data, len, filename, w, h, arg1, arg2);
     
-    
+
 #if (DUMP_FILENAMES == 1)
     DEBUG("File: %s\n", filename);
 #endif
@@ -201,18 +201,24 @@ static void hooks_init()
 #else
     hook(level_init_pre_entity, ctx.client.find_pattern<void *>("55 48 89 E5 53 48 89 F3 48 83 EC 08 C6 05 CC CC CC CC CC", MEMSCAN_FIRST_MATCH));
     hook(level_shutdown, ctx.client.find_pattern<void *>("55 48 89 E5 41 54 49 89 FC 53 48 8B 1D CC CC CC CC 48 89 DF", MEMSCAN_FIRST_MATCH));
-    hook(create_move, ctx.client.find_pattern<void *>("55 BF CC CC CC CC 48 89 E5 53 48 89 F3 48 83 EC 18", MEMSCAN_FIRST_MATCH));
+    hook(create_move, ctx.client.find_pattern<void *>("55 0F 28 C8 48 89 E5 41 54 49 89 F4", MEMSCAN_FIRST_MATCH));
     hook(fire_event_intern, rel_to_abs<void*>(ctx.engine.find_pattern<uintptr_t>("E9 CC CC CC CC 90 66 66 66 2E 0F 1F 84 CC CC CC CC CC 55 B9 CC CC CC CC", MEMSCAN_FIRST_MATCH).value() + 1));
     hook(killfeed_update, (void*)(ctx.client.find_pattern<uintptr_t>("66 90 55 48 89 E5 41 55 49 89 FD 41 54 48 89 F7 53 48 89 F3", MEMSCAN_FIRST_MATCH).value() + 2));
-    
-    // this function will crash when calling original
-    //hook(set_image_data_r8g8b8a8, rel_to_abs<void*>(ctx.panorama.find_pattern<uintptr_t>("E8 CC CC CC CC 84 C0 41 88 44 24 CC", MEMSCAN_FIRST_MATCH).value() + 1));
+    hook(set_image_data_r8g8b8a8, rel_to_abs<void*>(ctx.panorama.find_pattern<uintptr_t>("E8 CC CC CC CC 84 C0 41 88 44 24 CC", MEMSCAN_FIRST_MATCH).value() + 1));
 #endif
 }
 
 // setup ctx
 static void ctx_init()
 {
+#ifdef __linux__
+    void* panorama_vk = dlopen("panorama_client.so", RTLD_LAZY | RTLD_NOLOAD);
+    if (panorama_vk) {
+        ctx.g.is_vulkan = true;
+        dlclose(panorama_vk);
+    }
+#endif
+
     using namespace memscan;
     ctx.client   = mapped_region_t(GET_MODULE_HANDLE(CLIENT_DLL));
     LOG("client:   %x %x\n", ctx.client.get_start(), ctx.client.get_end());

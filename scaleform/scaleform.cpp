@@ -236,7 +236,9 @@ void scaleform_install()
 
 void scaleform_tick(tsf::player_t *local)
 {
+#ifdef __linux__
     static const Uint8 *state = SDL_GetKeyboardState(NULL);
+#endif
 
     // listen to user commands
     if (GET_ASYNC_KEY_STATE(SCALEFORM_TOGGLE_KEY) & 1)
