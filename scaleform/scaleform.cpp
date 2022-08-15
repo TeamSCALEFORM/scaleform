@@ -476,3 +476,17 @@ bool scaleform_get_replacement_icon(const char *name, const uint8_t *&data, size
     
     return false;
 }
+
+bool scaleform_try_votepanel_replacement_icons(const char *name, const uint8_t *&data, size_t &len, int &w, int &h)
+{
+    if (strstr(name, WIN32_LINUX("ui\\checkbox", "ui/checkbox")))
+    {
+        data = icon_checkbox; len = sizeof(icon_checkbox)-1; w = icon_checkbox_w; h = icon_checkbox_h;
+        return true;
+    } else if (strstr(name, WIN32_LINUX("ui\\cancel", "ui/cancel")))
+    {
+        data = icon_cancel; len = sizeof(icon_cancel)-1; w = icon_cancel_w; h = icon_cancel_h;
+        return true;
+    }
+    return false;
+}

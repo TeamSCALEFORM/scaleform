@@ -91,12 +91,11 @@ static const char *get_extension(const char *filename)
 }
 
 #define DUMP_ICONS 0
-#define DUMP_FILENAMES 0
+#define DUMP_FILENAMES 1
 bool set_image_data_r8g8b8a8::fn(FASTCALL_ARGS, const uint8_t *data, uint32_t len, const char *filename, int w, int h, void* arg1, int arg2)
 {
     if (!ctx.g.scf_on || !filename)
         return og(FASTCALL_CALL, data, len, filename, w, h, arg1, arg2);
-    
     
 #if (DUMP_FILENAMES == 1)
     DEBUG("File: %s\n", filename);
@@ -112,13 +111,11 @@ bool set_image_data_r8g8b8a8::fn(FASTCALL_ARGS, const uint8_t *data, uint32_t le
     constexpr const char eq_prefix[] = WIN32_LINUX_LITERAL("materials\\panorama\\images\\icons\\equipment\\", "materials/panorama/images/icons/equipment/");
     bool equipment = (strstr(filename, eq_prefix) == filename) && !strcmp(extension, VSVG_EXT);
     
+    const uint8_t *replacement_data;
+    size_t replacement_size;
+    int replacement_w, replacement_h;
     if (equipment)
     {
-        // gonna be written to by reference
-        const uint8_t *replacement_data;
-        size_t replacement_size;
-        int replacement_w, replacement_h;
-        
         // name
         char copy[256];
         const char *start_ptr = &filename[sizeof(eq_prefix) - 1];
@@ -141,6 +138,9 @@ bool set_image_data_r8g8b8a8::fn(FASTCALL_ARGS, const uint8_t *data, uint32_t le
         } else {
             DEBUG("!! didn't replace %s\n", copy);
         }
+    } else if (scaleform_try_votepanel_replacement_icons(filename, replacement_data, replacement_size, replacement_w, replacement_h)) 
+    {
+        return og(FASTCALL_CALL, replacement_data, replacement_size, filename, replacement_w, replacement_h, arg1, arg2);
     }
     
     return og(FASTCALL_CALL, data, len, filename, w, h, arg1, arg2);

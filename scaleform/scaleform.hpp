@@ -41,3 +41,4 @@ void scaleform_on_event(tsf::event_t *);
 void scaleform_after_event(const char *);
 void scaleform_dump_icons(const char *, const uint8_t *, size_t, const char *);
 bool scaleform_get_replacement_icon(const char *, const uint8_t *&, size_t &, int &, int &);
+bool scaleform_try_votepanel_replacement_icons(const char *, const uint8_t *&, size_t &, int &, int &);
