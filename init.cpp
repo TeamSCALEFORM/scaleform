@@ -114,7 +114,11 @@ bool set_image_data_r8g8b8a8::fn(FASTCALL_ARGS, const uint8_t *data, uint32_t le
     const uint8_t *replacement_data;
     size_t replacement_size;
     int replacement_w, replacement_h;
-    if (equipment)
+    if (scaleform_try_votepanel_replacement_icons(filename, replacement_data, replacement_size, replacement_w, replacement_h)) 
+    {
+        arg2 = 6;
+        return og(FASTCALL_CALL, replacement_data, replacement_size, filename, replacement_w, replacement_h, arg1, arg2);
+    } else if (equipment)
     {
         // name
         char copy[256];
@@ -135,12 +139,8 @@ bool set_image_data_r8g8b8a8::fn(FASTCALL_ARGS, const uint8_t *data, uint32_t le
             arg2 = 6;
             DEBUG("!! replaced %s\n", copy);
             return og(FASTCALL_CALL, replacement_data, replacement_size, filename, replacement_w, replacement_h, arg1, arg2);
-        } else {
+        } else
             DEBUG("!! didn't replace %s\n", copy);
-        }
-    } else if (scaleform_try_votepanel_replacement_icons(filename, replacement_data, replacement_size, replacement_w, replacement_h)) 
-    {
-        return og(FASTCALL_CALL, replacement_data, replacement_size, filename, replacement_w, replacement_h, arg1, arg2);
     }
     
     return og(FASTCALL_CALL, data, len, filename, w, h, arg1, arg2);

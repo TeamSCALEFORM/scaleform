@@ -105,6 +105,11 @@ namespace tsf
         {
             return ((void(THISCALL *)(ui_engine_t *, ui_panel_t *, const char *, const char *, int, int, bool, bool))((*(uintptr_t **)(this))[WIN32_LINUX(113, 114)]))(this, panel, js, schema_path, a5, a6, a7, a8);
         }
+        
+        void clear_file_cache()
+        {
+            return ((void(THISCALL *)(ui_engine_t *))((*(uintptr_t**)(this))[WIN32_LINUX(168, -1)]))(this);
+        }
     };
     
     struct panorama_t

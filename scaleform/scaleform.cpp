@@ -219,6 +219,10 @@ void scaleform_install()
     if (!engine)
         return LOG("Failed Scaleform install (ui engine)\n");
     
+    // NOTE(para): Important for vote panel (icons)
+    engine->clear_file_cache();
+    LOG("Attempted to clear Panorama cache\n");
+    
     // install base modifications
     engine->run_script(scf.root, base, CSGO_HUD_SCHEMA);
     
@@ -479,14 +483,15 @@ bool scaleform_get_replacement_icon(const char *name, const uint8_t *&data, size
 
 bool scaleform_try_votepanel_replacement_icons(const char *name, const uint8_t *&data, size_t &len, int &w, int &h)
 {
-    if (strstr(name, WIN32_LINUX("ui\\checkbox", "ui/checkbox")))
+    if (strstr(name, "checkbox."))
     {
         data = icon_checkbox; len = sizeof(icon_checkbox)-1; w = icon_checkbox_w; h = icon_checkbox_h;
         return true;
-    } else if (strstr(name, WIN32_LINUX("ui\\cancel", "ui/cancel")))
+    } else if (strstr(name, "cancel."))
     {
         data = icon_cancel; len = sizeof(icon_cancel)-1; w = icon_cancel_w; h = icon_cancel_h;
         return true;
     }
+    
     return false;
 }
