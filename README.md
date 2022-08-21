@@ -2,6 +2,7 @@
 <a href="https://discord.gg/FDkMfgZDnz"><img width="245" src="https://discord.com/api/guilds/1000835399364661420/widget.png?style=banner3" alt="discord"></a><br>
 Join us on Discord!
 
+<img src="https://images2.imgbox.com/b6/59/iW0BrOne_o.png" alt="banner"></img>
 # scaleform
 A hackable and future-proof reimplementation of In-Game Scaleform HUD in CS:GO using Panorama. Written using C, C++ and JS.
 
