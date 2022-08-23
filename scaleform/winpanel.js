@@ -2,6 +2,9 @@ R"(
 var contextPanel = $.GetContextPanel();
 var textColor = ${isCt} ? '#B4BBBE' : '#D6C8B5';
 
+var winPanelFg = contextPanel.FindChildrenWithClassTraverse('WinPanelTeam')[0].FindChildrenWithClassTraverse('TeamFG')[0];
+winPanelFg.style.backgroundColor = '#FFFFFF';
+
 var mvpStar = 'https://cdn.discordapp.com/attachments/954389817536421908/957676079642980392/star.svg';
 var winpanelBackground = ${isCt} ? 'https://images2.imgbox.com/9b/a5/igisaPg8_o.png' : ${isT} ? 'https://images2.imgbox.com/c9/be/43gnCOjE_o.png' : 'https://images2.imgbox.com/9b/a5/igisaPg8_o.png';
 if (${is2013})
@@ -26,6 +29,10 @@ for (var winPanelBg of contextPanel.FindChildTraverse('HudWinPanel').FindChildre
     winPanelBg.style.marginTop = '-42px';
     winPanelBg.style.width = '815px';
     winPanelBg.style.height = '155px';
+    winPanelFg.style.marginTop = '-42px';
+    winPanelFg.style.width = '815px';
+    winPanelFg.style.height = '155px';
+	winPanelFg.style.marginLeft = '105px';
     winPanelBg.style.backgroundImage = `url(${winpanelBackground})`;
     winPanelBg.style.backgroundSize = 'cover';
     winPanelBg.style.marginLeft = '105px';
@@ -135,4 +142,31 @@ for (var h of contextPanel.FindChildTraverse('HudWinPanel').FindChildrenWithClas
 for (var h of contextPanel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('TeamBG__hrMid')) {h.style.x = '0';h.style.y = '0';h.style.width = '0';h.style.height = '0';}
 for (var h of contextPanel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('TeamBG__hrBot')) {h.style.x = '0';h.style.y = '0';h.style.width = '0';h.style.height = '0';}
 for (var hideTeamIcon of contextPanel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('TeamBG__DefaultLogo')){hideTeamIcon.style.visibility ='collapse'; hideTeamIcon.style.opacity = '0';}
+
+
+/* <--------- FLASHING ----------> */
+
+function firstFlash() {
+    for (var star of contextPanel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('MVP__WinnerStar'))    {
+    	star.style.transition = 'wash-color 0.15s linear 0.0s';
+    	star.style.washColor = '#FFFFFF';
+	}    
+
+	winPanelFg.style.transition = 'background-color 0.15s linear 0.0s';
+	winPanelFg.style.backgroundColor = '#FFFFFF';
+}
+
+function secondFlash() {
+    for (var star of contextPanel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('MVP__WinnerStar'))    {
+    	star.style.transition = 'wash-color 0.30s linear 0.0s';
+    	star.style.washColor = '#FFD856';
+	}    
+
+	winPanelFg.style.transition = 'background-color 0.30s linear 0.0s';	
+	winPanelFg.style.backgroundColor = 'transparent';
+}
+
+$.Schedule(0.2, firstFlash);
+$.Schedule(0.35, secondFlash);
+
 )"
