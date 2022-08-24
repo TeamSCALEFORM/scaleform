@@ -3,16 +3,16 @@ var contextPanel = $.GetContextPanel();
 var textColor = ${isCt} ? '#B4BBBE' : '#D6C8B5';
 
 var winPanelFg = contextPanel.FindChildrenWithClassTraverse('WinPanelTeam')[0].FindChildrenWithClassTraverse('TeamFG')[0];
-winPanelFg.style.backgroundColor = '#FFFFFF';
+winPanelFg.backgroundColor = '#ffffff00';
 
 var mvpStar = 'https://cdn.discordapp.com/attachments/954389817536421908/957676079642980392/star.svg';
-var winpanelBackground = ${isCt} ? 'https://images2.imgbox.com/9b/a5/igisaPg8_o.png' : ${isT} ? 'https://images2.imgbox.com/c9/be/43gnCOjE_o.png' : 'https://images2.imgbox.com/9b/a5/igisaPg8_o.png';
+var winpanelBackground = ${isCt} ? 'https://images2.imgbox.com/dd/a0/NGbPjmfs_o.png' : ${isT} ? 'https://images2.imgbox.com/2c/64/OQBzyOLT_o.png' : 'https://images2.imgbox.com/dd/a0/NGbPjmfs_o.png';
 if (${is2013})
     winpanelBackground = ${isCt} ? 'https://images2.imgbox.com/77/d5/T79ImP9g_o.png' : ${isT} ? 'https://images2.imgbox.com/26/56/eEUIVB7m_o.png' : 'https://images2.imgbox.com/77/d5/T79ImP9g_o.png';
 
 if(!${pendingMvp} && !${is2013})
 {
-    winpanelBackground = ${isCt} ? 'https://cdn.discordapp.com/attachments/1001139177624178698/1001141660463403019/mvp.png' : ${isT} ? 'https://cdn.discordapp.com/attachments/1001139177624178698/1001141660153036872/mvp2.png' : 'https://cdn.discordapp.com/attachments/1001139177624178698/1001141660463403019/mvp.png';
+    winpanelBackground = ${isCt} ? 'https://images2.imgbox.com/aa/19/PZCGWu3Y_o.png' : ${isT} ? 'https://images2.imgbox.com/a8/41/vccaTYzS_o.png' : 'https://images2.imgbox.com/aa/19/PZCGWu3Y_o.png';
 }
 for (var mvp of contextPanel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('MVP'))
 {
