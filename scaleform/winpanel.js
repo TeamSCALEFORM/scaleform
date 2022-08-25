@@ -108,8 +108,8 @@ for (var profileImg of contextPanel.FindChildTraverse('HudWinPanel').FindChildre
         profileImg.style.visibility = 'collapse';
     }
 }
-var subs = 60
-var start = 5 + subs
+var count = 60
+var start = 5 + count
 var funFact = contextPanel.FindChildTraverse('FunFactText');
 if (!${is2013})
 {
@@ -144,16 +144,17 @@ else
 // does it work? yes.
 // you win some,
 // you lose some.
-var count = subs
 var time = 0.20
 var funfactTime = 1.0
 $.Schedule(funfactTime, function() {
-	for (var z = 0; z <= subs/2; ++z)
+	for (var z = 0; z <= 60; ++z)
 	{
-		$.Schedule(time * (z/subs), function() {
-			var e = 5 + count
-			funFact.style.marginTop = `${e}px`
-			count -= 1
+		$.Schedule(time * (z/60), function() {
+			if (count >= 0) {
+				var e = 5 + count
+				funFact.style.marginTop = `${e}px`
+				count -= 1
+			}
 		})
 	}
 })
