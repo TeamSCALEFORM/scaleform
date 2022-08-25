@@ -1,0 +1,36 @@
+name: BuildRelease
+  
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  # Path to the solution file relative to the root of the project.
+  SOLUTION_FILE_PATH: .
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Enable Developer Command Prompt
+      uses: ilammy/msvc-dev-cmd@v1.10.0
+      with:
+        arch: win32
+
+    - uses: actions/checkout@v3
+
+    - name: Build
+      working-directory: ${{env.GITHUB_WORKSPACE}}
+      run: ./build_release.bat
+      
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+          name: ReleaseBuild
+          path: ./out/build/x86-release/TeamSCALEFORM.dll
