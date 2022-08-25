@@ -108,13 +108,15 @@ for (var profileImg of contextPanel.FindChildTraverse('HudWinPanel').FindChildre
         profileImg.style.visibility = 'collapse';
     }
 }
+var subs = 60
+var start = 5 + subs
 var funFact = contextPanel.FindChildTraverse('FunFactText');
 if (!${is2013})
 {
     funFact.style.width = '813px';
     funFact.style.height = '35px';
     funFact.style.x = '107px';
-    funFact.style.marginTop = '5px';
+    funFact.style.marginTop = `${start}px`;
     funFact.style.backgroundColor = '#000000CC';
     funFact.style.verticalAlign = 'center';
     funFact.style.textAlign = 'center';
@@ -128,7 +130,7 @@ else
     funFact.style.width = '813px';
     funFact.style.height = '40px';
     funFact.style.x = '107px';
-    funFact.style.marginTop = '5px';
+    funFact.style.marginTop = `${start}px`;
     funFact.style.backgroundColor = '#000000CC';
     funFact.style.textAlign = 'left';
     funFact.style.fontSize = '19px';
@@ -137,6 +139,24 @@ else
     funFact.style.paddingTop = '10px';
     funFact.style.paddingLeft = '25px';
 }
+
+// is this horrible? yes.
+// does it work? yes.
+// you win some,
+// you lose some.
+var count = subs
+var time = 0.20
+var funfactTime = 1.0
+$.Schedule(funfactTime, function() {
+	for (var z = 0; z <= subs/2; ++z)
+	{
+		$.Schedule(time * (z/subs), function() {
+			var e = 5 + count
+			funFact.style.marginTop = `${e}px`
+			count -= 1
+		})
+	}
+})
 /* <--------- REMOVALS ---------->*/
 for (var h of contextPanel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('TeamBG__hrTop')) {h.style.x = '0';h.style.y = '0';h.style.width = '0';h.style.height = '0';}
 for (var h of contextPanel.FindChildTraverse('HudWinPanel').FindChildrenWithClassTraverse('TeamBG__hrMid')) {h.style.x = '0';h.style.y = '0';h.style.width = '0';h.style.height = '0';}
