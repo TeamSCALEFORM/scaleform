@@ -20,6 +20,8 @@ jobs:
     steps:
     - name: Enable Developer Command Prompt
       uses: ilammy/msvc-dev-cmd@v1.10.0
+      with:
+        arch: win32
 
     - uses: actions/checkout@v3
 
