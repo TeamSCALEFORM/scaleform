@@ -215,11 +215,9 @@ static void ctx_init()
     if (panorama.has_value())
         ctx.i.panorama = *(tsf::panorama_t **)(panorama.value() + 1);
 #else
-    // there is a different panorama lib for vulkan
-    auto panorama_gl = ctx.panorama.find_pattern<uintptr_t>("48 8B 05 CC CC CC CC 48 8D 1D CC CC CC CC", MEMSCAN_FIRST_MATCH);
-    
-    if (panorama_gl.has_value())
-        ctx.i.panorama = **rel_to_abs<tsf::panorama_t ***>(panorama_gl.value() + 3);
+    auto panorama = ctx.panorama.find_pattern<uintptr_t>("48 8B 05 CC CC CC CC 48 8D 1D CC CC CC CC", MEMSCAN_FIRST_MATCH);
+    if (panorama.has_value())
+        ctx.i.panorama = **rel_to_abs<tsf::panorama_t ***>(panorama.value() + 3);
 #endif
     else (void)(LOG("Failed init (panorama interface nil)\n"), exit(0));
     
@@ -239,10 +237,9 @@ static void ctx_init()
     if (compare_extension.has_value())
         ctx.f.compare_extension = compare_extension.value();
 #else
-    auto compare_extension_gl = ctx.panorama.find_pattern<uintptr_t>("E8 CC CC CC CC 80 78 03 7B", MEMSCAN_FIRST_MATCH);
-    
-    if (compare_extension_gl.has_value())
-        ctx.f.compare_extension = rel_to_abs<decltype(ctx.f.compare_extension)>(compare_extension_gl.value() + 1);
+    auto compare_extension = ctx.panorama.find_pattern<uintptr_t>("E8 CC CC CC CC 80 78 03 7B", MEMSCAN_FIRST_MATCH);  
+    if (compare_extension.has_value())
+        ctx.f.compare_extension = rel_to_abs<decltype(ctx.f.compare_extension)>(compare_extension.value() + 1);
 #endif
     else (void)(LOG("Failed init (compare_extension function nil)\n"), exit(0));
     
