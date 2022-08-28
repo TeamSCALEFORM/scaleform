@@ -26,8 +26,6 @@ struct scaleform_t
     float old_alpha;
     // old healthammo style cvar value
     int old_healthammo_style;
-    // old in buyzone value
-    int old_in_buyzone;
     // verify if we received mvp event
     bool pending_mvp;
     // old weapon selection rows count

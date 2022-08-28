@@ -2,7 +2,6 @@ R"(
 var contextPanel = $.GetContextPanel();
 
 var hudBottomRightImg = "https://images2.imgbox.com/ac/02/og3P1Xvp_o.png"
-var moneyBgImg = "https://images2.imgbox.com/a9/2f/lt6Pj1Mc_o.png"
 var dashboardLabelImg = "https://images2.imgbox.com/62/17/y3tvD95I_o.png"
 var hudTeamCountBgT = "https://images2.imgbox.com/0f/d5/fpNsbsSC_o.png";
 var hudTeamCountBgCT = "https://images2.imgbox.com/05/8f/f32nMOYd_o.png";
@@ -19,37 +18,35 @@ hudBottomRight.style.overflow = 'squish';
 hudBottomRight.style.backgroundImgOpacity = '0.95';
 
 var hudMoney = contextPanel.FindChildTraverse('HudMoney');
-// Background position is 0% by default which doesn't show
-// our own buy cart. This is handled in {buyzone.js}
 var moneyBg = hudMoney.FindChildTraverse('MoneyBG');
 moneyBg.style.width = '291px';
 moneyBg.style.height = '44px';
 moneyBg.style.horizontalAlign = 'center';
 moneyBg.style.verticalAlign = 'center';
 moneyBg.style.marginLeft = '0px';
-moneyBg.style.backgroundImage = `url(${moneyBgImg})`;
-moneyBg.style.backgroundColor = '#00000000';
+moneyBg.style.backgroundColor = 'gradient( linear, 0% 0%, 100% 0%, from( #000000 ), color-stop( 0.65, #000000 ), to( #00000000 ) );';
 moneyBg.style.backgroundSize = '200% 100%';
 moneyBg.style.backgroundRepeat = 'no-repeat';
 moneyBg.style.backgroundImgOpacity = '0.95';
 
 for (var moneyText of hudMoney.FindChildrenWithClassTraverse('money-text')) {
     moneyText.style.horizontalAlign = 'left';
-    moneyText.style.flowChildren = 'right';
+    moneyText.style.flowChildren = 'left';
     moneyText.style.verticalAlign = 'middle';
-    moneyText.style.marginLeft = '0px';
 }
 
 for (var moneyLabel of hudMoney.FindChildrenWithClassTraverse('money-text-label')) {
 	moneyLabel.style.marginTop = '3px';
-	moneyLabel.style.marginLeft = '65px';
-	moneyLabel.style.transform = 'translateX(0px)';    
+	moneyLabel.style.marginLeft = '0';
 }
 
-// Fully remove this, as due to layouting rules we have to replace this with
-// a dynamically UV-mapped image
-for (var buyIcon of hudMoney.FindChildrenWithClassTraverse('money-text-buy-icon')) {
-	buyIcon.style.visibility = 'collapse';
+for (var moneyIcon of hudMoney.FindChildrenWithClassTraverse('money-text-buy-icon')) {
+    moneyIcon.SetImage('https://images2.imgbox.com/f9/98/WklKcw6n_o.png');
+    moneyIcon.style.height = '36px';
+    moneyIcon.style.width = '36px';
+    moneyIcon.style.transform = 'translateY(-3px)';
+    moneyIcon.style.marginLeft = '17px';
+    moneyIcon.style.marginRight = '10px';
 }
 
 // Reposition and change the color of animations

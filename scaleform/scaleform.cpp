@@ -27,12 +27,6 @@ JAVASCRIPT teamcount_avatar =
 #include "teamcount_avatar.js"
 ;
 
-// ${buyZone} - percentage
-#define BUYZONE "${buyZone}"
-JAVASCRIPT buyzone =
-#include "buyzone.js"
-;
-
 // ${isShort} - is healthammo style short
 #define HEALTHAMMO_STYLE "${isShort}"
 JAVASCRIPT healthammo =
@@ -150,7 +144,6 @@ void scaleform_init()
     scf.inited = false;
     scf.old_color = scf.old_healthammo_style = -1;
     scf.old_alpha = -1.f;
-    scf.old_in_buyzone = -1;
     scf.pending_mvp = false;
     scf.old_weap_rows_count = 0;
 }
@@ -317,14 +310,6 @@ void scaleform_tick(tsf::player_t *local)
                      DEBUG("Changed hud healthammo style!\n");
                      std::string js = std::string(healthammo);
                      replace_str(js, HEALTHAMMO_STYLE, (n == 0 ? "true" : "false"));
-                     engine->run_script(scf.root, js.c_str(), CSGO_HUD_SCHEMA);
-                 });
-    
-    UPDATING_VAR(scf.old_in_buyzone, n, local->in_buyzone(),
-                 {
-                     DEBUG("Changed buyzone state!\n");
-                     std::string js = std::string(buyzone);
-                     replace_str(js, BUYZONE, n == 1 ? "100%" : "0%");
                      engine->run_script(scf.root, js.c_str(), CSGO_HUD_SCHEMA);
                  });
     
