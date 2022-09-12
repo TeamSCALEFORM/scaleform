@@ -1,6 +1,6 @@
 
-<a href="https://discord.gg/FDkMfgZDnz"><img width="245" src="https://discord.com/api/guilds/977328243352957030/widget.png?style=banner1" alt="aventum discord"></a><br>
-<a href="https://discord.gg/FDkMfgZDnz"><img width="245" src="https://discord.com/api/guilds/1000835399364661420/widget.png?style=banner1" alt="tsf discord"></a><br>
+<a href="https://discord.gg/FDkMfgZDnz"><img width="245" src="https://discord.com/api/guilds/977328243352957030/widget.png?style=banner2" alt="aventum discord"></a><br>
+<a href="https://discord.gg/FDkMfgZDnz"><img width="245" src="https://discord.com/api/guilds/1000835399364661420/widget.png?style=banner2" alt="tsf discord"></a><br>
 Join us on Discord!
 <img src="https://cdn.discordapp.com/attachments/809138115272638579/1018941705237577748/man.png" alt="banner"></img>
 <img src="https://images2.imgbox.com/b6/59/iW0BrOne_o.png" alt="banner"></img>
