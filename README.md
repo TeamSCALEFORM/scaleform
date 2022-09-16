@@ -46,6 +46,16 @@ To build this project, you must install `CMake (>=3.21)`, `Ninja` and `Visual St
 
 Then, a build should start, and when it's done, your command prompt will be moved to the output directory, which should contain a `TeamSCALEFORM.dll` binary.
 
+# Building - Linux
+On Linux you will need to install `Ninja` & `CMake (>=3.21)`, then clone the repository and build it.
+```bash
+git clone https://github.com/TeamSCALEFORM/scaleform
+cd scaleform
+cmake -G Ninja
+ninja
+```
+You should now have a `libTeamSCALEFORM.so` in your current directory.
+
 # Ports
 We support ports of the boilerplate to software's APIs. If you developed a port of the scaleform boilerplate, open a pull request that links your repository under this comment.
 <!-- Here! Remember to use [name](url) -->
