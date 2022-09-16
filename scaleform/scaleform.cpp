@@ -328,17 +328,9 @@ void scaleform_tick(tsf::player_t *local)
                      engine->run_script(scf.root, js.c_str(), CSGO_HUD_SCHEMA);
                  });
     
-    // sorry for the very bad code
-    // NOTE(para): it's so bad that i felt the need to clarify
-    // for some reason valve really doesn't like this being stored on the
-    // stack.
-    // see here too 55 8B EC 83 3D ? ? ? ? ? 8B 15 ? ? ? ? 56 8B F1 C7 05
-    constexpr size_t size = sizeof(tsf::utl_vector_t<tsf::ui_panel_t *>);
-    auto vec = (tsf::utl_vector_t<tsf::ui_panel_t *> *)malloc(size); 
-    memset(vec, 0, size);
-    scf.weap_sel->find_children_with_class_traverse("weapon-row", vec);
-    int count = vec->size;
-    free(vec);
+    tsf::utl_vector_t<tsf::ui_panel_t *> vec{ };
+    scf.weap_sel->find_children_with_class_traverse("weapon-row", &vec);
+    int count = vec.size;
     
     UPDATING_VAR(scf.old_weap_rows_count, n, count, 
                  {

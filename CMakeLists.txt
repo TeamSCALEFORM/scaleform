@@ -40,11 +40,11 @@ find_package(SDL2 REQUIRED)
 
 include_directories(${SDL2_INCLUDE_DIRS})
 
-add_library("${CMAKE_PROJECT_NAME}" SHARED ${SRC} ${FUNCHOOK_SOURCES})
+add_library(${CMAKE_PROJECT_NAME} SHARED ${SRC} ${FUNCHOOK_SOURCES})
 
-target_link_options("${CMAKE_PROJECT_NAME}" PRIVATE LINKER:--no-undefined)
-target_link_libraries("${CMAKE_PROJECT_NAME}" PRIVATE ${SDL2_LIBRARIES})
-target_include_directories("${CMAKE_PROJECT_NAME}" PRIVATE
+target_link_options(${CMAKE_PROJECT_NAME} PRIVATE LINKER:--no-undefined)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE ${SDL2_LIBRARIES})
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     "${CMAKE_SOURCE_DIR}/funchook/include"
 )
 
